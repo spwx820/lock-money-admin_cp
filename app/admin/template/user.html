@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("用户管理");
+        })
+
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">用户管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/user/" method="post" name="form_member_search">
+                注册时间：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                Calendar.setup({
+                    inputField     :    "start_time",
+                    ifFormat       :    "%Y-%m-%d",
+                    showsTime      :    false,
+                    timeFormat     :    "24"
+                });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                Calendar.setup({
+                    inputField     :    "end_time",
+                    ifFormat       :    "%Y-%m-%d",
+                    showsTime      :    false,
+                    timeFormat     :    "24"
+                });
+                </script>
+                <select name="type">
+                    <{if 1 == $selectType}>
+                    <option value='1' selected>手机号</option>
+                    <{else}>
+                    <option value='1'>手机号</option>
+                    <{/if}>
+                    <{if 2 == $selectType}>
+                    <option value='2' selected>用户ID</option>
+                    <{else}>
+                    <option value='2'>用户ID</option>
+                    <{/if}>
+                    <{if 3 == $selectType}>
+                    <option value='3' selected>设备ID</option>
+                    <{else}>
+                    <option value='3'>设备ID</option>
+                    <{/if}>
+                    <{if 4 == $selectType}>
+                    <option value='4' selected>注册IP</option>
+                    <{else}>
+                    <option value='4'>注册IP</option>
+                    <{/if}>
+                    <{if 5 == $selectType}>
+                    <option value='5' selected>渠道号</option>
+                    <{else}>
+                    <option value='5'>渠道号</option>
+                    <{/if}>
+                </select>
+                <input name="keyword" type="text" value="<{$keyword}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/user/" class="on">
+            <em>用户管理</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/user/add">
+            <em>添加用户</em>
+        </a>
+        <span>|</span>
+        <em class="red">(小提示：注册IP、渠道号查询时注册时间不能为空)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/user/delete" method="post" name="form_member_manage">
+        <div class="table-list">
+            <table width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th align="left" width="40"><input type="checkbox" value="" id="check_box" onclick="selectall('uid[]');"></th>
+                    <th align="left" width="60">用户ID</th>
+                    <th align="left">用户手机号</th>
+                    <th align="left">设备号</th>
+                    <th align="left">imsi号</th>
+                    <th align="left">余额</th>
+                    <th align="left">状态</th>
+                    <th align="left">邀请码</th>
+                    <th align="left">渠道</th>
+                    <th align="left">注册时间</th>
+                    <th align="left">注册IP</th>
+                    <th align="left">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <{if $userList}>
+                <{foreach from=$userList item=item key=key}>
+                <tr>
+                    <td><input name="uid[]" id="uid[]" type="checkbox" value="<{$item.uid}>"></td>
+                    <td align="center"><{$item.uid}></td>
+                    <td align="left"><{$item.pnum}></td>
+                    <td align="left"><{$item.device_id}></td>
+                    <td align="left"><{$item.imsi}></td>
+                    <td align="left"><{$item.score}></td>
+                    <td align="left"><{$userStatus[$item.status]}></td>
+                    <td align="left"><{$item.invite_code}></td>
+                    <td align="left"><{$item.channel}></td>
+                    <td align="left"><{$item.ctime}></td>
+                    <td align="left"><{$item.register_ip}></td>
+                    <td align="left">
+                        <a href="/admin/user/audit?uid=<{$item.uid}>">[审核]</a>&nbsp;|&nbsp;
+                        <a href="/admin/user/detail?uid=<{$item.uid}>">[详细]</a></td>
+                </tr>
+                <{/foreach}>
+                <{/if}>
+                </tbody>
+            </table>
+            <div class="btn">
+                <label for="check_box">全选/取消</label>
+                <input type="submit" class="button" value="删除" onclick="return confirm('您确定要删除吗？')"/>
+            </div>
+            <div id="pages"><{$userPages}></div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

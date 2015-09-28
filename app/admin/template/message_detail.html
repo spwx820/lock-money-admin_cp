@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("消息详细");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">消息管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/message/"><em>消息记录</em></a><span>|</span>
+        <a href="/admin/message/add"><em>消息添加</em></a><span>|</span>
+        <a href="/admin/message/detail?mid=<{$mid}>&page=<{$page}>" class="on"><em>消息详细</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <table width="100%"  class="table_form">
+        <tr>
+            <td>消息ID：</td>
+            <td align="left"><{$getMessage['id']}></td>
+            <td>是否通知：</td>
+            <td align="left"><{$messageNotify[$getMessage['info_notify']]}></td>
+            <td>类型：</td>
+            <td align="left"><{$messageType[$getMessage['message_type']]}></td>
+        </tr>
+        <tr>
+            <td>状态：</td>
+            <td><{$messageStatus[$getMessage['status']]}></td>
+            <td>上线时间：</td>
+            <td align="left"><{$getMessage['start_time']}></td>
+            <td>下线时间：</td>
+            <td align="left"><{$getMessage['end_time']}></td>
+        </tr>
+        <tr>
+            <td>返回信息：</td>
+            <td align="left"><{$getMessage['callback_info']}></td>
+            <td>创建人：</td>
+            <td align="left"><{$getMessage['creater']}></td>
+            <td>创建时间：</td>
+            <td><{$getMessage['createtime']}></td>
+        </tr>
+        <tr>
+            <td>消息标题：</td>
+            <td colspan="2" align="left"><{$getMessage['info_title']}></td>
+            <td >发送尾号：</td>
+            <td align="left"><{$getMessage['rate']}></td>
+
+        </tr>
+        <tr>
+            <td width="100">消息内容：</td>
+            <td colspan="7" align="left">
+                <textarea style="height:100px; width:40%" ><{$getMessage['content']}></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td width="100">分享内容：</td>
+            <td colspan="7" align="left">
+                <textarea style="height:100px; width:40%"><{$getMessage['share_msg']}></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td width="100">点击链接：</td>
+            <td colspan="7" align="left">
+                <{$getMessage['click_url']}>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="100">按钮文字：</td>
+            <td colspan="7" align="left">
+                <{$getMessage['button_text']}>
+            </td>
+        </tr>
+        <tr>
+            <td width="100">图片地址：</td>
+            <td colspan="7" align="left"><{$getMessage['url_images']}></td>
+        </tr>
+        <tr>
+            <td width="100">图片：</td>
+            <td colspan="7" align="left">
+                <{if !empty($getMessage['url_images'])}>
+                <img src="<{$getMessage['url_images']}>" width="100" height="200">
+                <{/if}>
+            </td>
+        </tr>
+    </table>
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="left">消息ID</th>
+                <th align="left">用户ID</th>
+                <th align="left">状态</th>
+                <th align="left">操作人</th>
+                <th align="left">创建时间</th>
+                <th align="left">返回信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $messageList}>
+            <{foreach from=$messageList item=item key=key}>
+            <tr>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.mid}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$messagePriStatus[$item.status]}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left"><{$item.callback_info}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

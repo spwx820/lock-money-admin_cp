@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("打包记录");
+        })
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">打包管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/package/" method="post" name="form_member_search">
+                时间搜索：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $pkOs}>
+                    <{foreach from=$pkOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="succ" id="succ">
+                    <option value='0' >状态</option>
+                    <option value='1' >全部</option>
+                    <option value='2' >本地包正常</option>
+                    <option value='3' >cdn包正常</option>
+                    <option value='4' >获取包异常</option>
+                    <option value='5' >本地包异常</option>
+                    <option value='6' >cdn包异常</option>
+
+                </select>
+
+                <select name="type">
+                    <option value='1' >操作人</option>
+                    <option value='2' >邀请码</option>
+                    <option value='3' >渠道号</option>
+                </select>
+
+                <input name="keyword" type="text" value="<{$keyword}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+
+                <{if in_array($adminId,array(1,2,3,4,5,8,29,30))}>
+                <{if $succ == 6}>
+                <span>|</span>
+                <input type="button" class="button" id="button" name="button" value="检查cdn" onclick="window.location.href ='/admin/package/batch_check_cdn'"/>
+
+                <{/if}>
+                <{/if}>
+
+            </form>
+        </div>
+        <div class="lt">
+            <a href="/admin/package/" class="on"><em>打包记录</em></a>
+            <span>|</span>
+            <a href="/admin/package/add"><em>打包添加</em></a>
+            <span>|</span>
+            <a href="/admin/package/excel?creater=<{$keyword}>&start_time=<{$startTime}>&end_time=<{$endTime}>">
+                <em>记录导出</em>
+            </a>
+            <{if in_array($adminId,array(1,2,3,4,5,8,29,30))}>
+            <span>|</span>
+            <a href="/admin/package/batch_ios"><em>IOS批量打包</em></a>
+            <span>|</span>
+            <a href="/admin/package/batch_ios_zaibei"><em>IOS灾备打包</em></a>
+            <{/if}>
+
+        </div>
+    </div>
+
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/package/del" method="post" name="form_member_manage">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left" width="40"><input type="checkbox" value="" id="check_box" onclick="selectall('pid[]');"></th>
+                <th align="center">ID</th>
+                <th align="left">邀请码</th>
+                <th align="left">渠道号</th>
+                <th align="left">安装量</th>
+                <th align="left">二次分享数</th>
+                <th align="left">隐藏邀请码</th>
+                <th align="left">系统</th>
+                <th align="left" width="150">下载URL</th>
+                <th align="left">操作人</th>
+                <th align="left">创建时间</th>
+                <th align="left">操作</th>
+                <th align="left">包状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $packageList}>
+            <{foreach from=$packageList item=item key=key}>
+            <tr>
+                <td><input name="pid[]" id="pid[]" type="checkbox" value="<{$item.id}>"></td>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.sum_num}></td>
+                <td align="left"><{$item.share_num}></td>
+                <td align="left"><{$publicRadio[$item.is_hidden_invite]}></td>
+                <td align="left"><{$pkOs[$item.pk_os]}></td>
+                <td align="left" width="150">
+                    <{if 2 == $item.pk_os}>
+                    <input size="40" value="itms-services://?action=download-manifest&url=<{$item.plist_url}>" type=text class="input-text"/>
+                    <{else}>
+                    <input size="40" value="<{$apiUrl}>/invite_pk_jump.do?ispak=1&uid=<{$item.invite}>&channel=<{$item.channel}>" type=text class="input-text"/>
+                    <{/if}>
+                </td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left">
+                    <a href="/admin/package/detail?id=<{$item.id}>">[详细]</a>&nbsp;|&nbsp;
+                    <a href="/admin/package/count?id=<{$item.id}>">[统计]</a>&nbsp;|&nbsp;
+                    <{if 2 == $item.pk_os}>
+                    <a href="/admin/package/pak?invite=<{$item.uid}>&channel=<{$item.channel}>&c=<{$item.c}>&page=<{$page}>">[打包]</a>
+                    <{/if}>
+                </td>
+                <td align="left"> <{if $item.pk_os == 2 }> <{if $item.STATUS == 1 }> <span class="green">本地包正常</span> <{/if}>
+                    <{if $item.STATUS == 2 }> <span class="green">cdn包正常</span> <{/if}>
+                    <{if $item.STATUS == -3 }> <span class="red">cdn包异常</span> <{/if}>
+                    <{if $item.STATUS == -1 }> <span class="red">本地包异常</span> <{/if}>
+                    <{if $item.STATUS == -2 }> <span class="red">获取包文件异常</span> <{/if}>
+
+                    <{/if}> </td>
+
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div class="btn">
+            <label for="check_box">全选/取消</label>
+            <input type="submit" class="button" value="删除" onclick="return confirm('您确定要删除吗？')"/>
+        </div>
+        <div id="pages"><{$packagePages}></div>
+    </div>
+    </form>
+</div>
+<script type="application/javascript">
+
+    function selected(){
+        document.getElementById("succ")[parseInt("<{$succ}>")].selected=true;
+    }
+    selected();
+
+</script>
+
+</body>
+</html>

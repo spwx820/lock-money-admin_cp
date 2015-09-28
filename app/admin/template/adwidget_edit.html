@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("广告编辑");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+        $("#ad_name").formValidator({onshow:"请输入名称",onfocus:"名称不能为空"}).regexValidator({regexp:"notempty",datatype:"enum",onerror:"名称不能为空"});
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">widget广告</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/adwidget/">
+            <em>widget广告</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/adwidget/add">
+            <em>广告添加</em>
+        </a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/adwidget/edit" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="100">广告标题：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="ad_name" id="ad_name" value="<{$adRe['name']}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">广告类别：</th>
+                <td class="y-bg">
+                    <select name="ac">
+                        <option value=''>请选择类别</option>
+                        <{if $adType}>
+                        <{foreach from=$adType item=item key=key}>
+                        <{if $adRe['action'] == <{$item.action}>}>
+                        <option value='<{$item.action}>' selected><{$item.name}></option>
+                        <{else}>
+                        <option value='<{$item.action}>' ><{$item.name}></option>
+                        <{/if}>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">进程名：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="process_name" id="process_name" value="<{$adRe['process_name']}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">积分墙广告ID：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="ad_id" id="ad_id" value="<{$adRe['ad_id']}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">URLScheme：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="url_scheme" id="url_scheme" value="<{$adRe['url_scheme']}>"/>
+                    <span class="red">(小提示：积分墙广告ID不存在时填写)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">消息ID：</th>
+                <td class="y-bg">
+                    <select name="message_id">
+                        <option value=''>请选择消息</option>
+                        <{if $publicMsg}>
+                        <{foreach from=$publicMsg item=item key=key}>
+                        <{if $adRe['message_id'] == <{$item.id}>}>
+                        <option value='<{$item.id}>' selected><{$item.info_title}></option>
+                        <{else}>
+                        <option value='<{$item.id}>' ><{$item.info_title}></option>
+                        <{/if}>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">跳转链接：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="click_url" id="click_url" value="<{$adRe['click_url']}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">是否置顶：</th>
+                <td class="y-bg">
+                    <{if 1 == $adRe['top']}>
+                    <input type="radio" value="1" checked name="top"> 是
+                    <input type="radio" value="0" name="top"> 否
+                    <{else}>
+                    <input type="radio" value="1" name="top"> 是
+                    <input type="radio" value="0" checked name="top"> 否
+                    <{/if}>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">上传文件：</th>
+                <td class="y-bg">
+                    <img src="<{$adRe['url_images']}>" width="100" height="200"><br/><br/>
+                    <{$adRe['url_images']}><br/><br/>
+                    <input type="file" name="file_uplode" id="file_uplode" />
+                    <br/><span class="red">(小提示：限制大小200K,尺寸1242*2208)</span>
+                </td>
+            </tr>
+            <link href="/js/calendars/jscal2.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/border-radius.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/win2k.css" type="text/css" rel="stylesheet">
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/lang/en.js" type="text/javascript"></script>
+            <tr>
+                <th width="100">上架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="start_date" id="start_date" class="date input-text" type="text" readonly="" size="21" value="<{$adRe['start_date']}>">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "start_date",
+                            trigger : "start_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">下架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="end_date" id="end_date" class="date input-text" type="text" readonly="" size="21" value="<{$adRe['end_date']}>">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "end_date",
+                            trigger : "end_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">广告说明：</th>
+                <td class="y-bg">
+                    <textarea style="height:120px; width:30%" name="tips" id="tips"><{$adRe['tips']}></textarea>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="hidden" name="id" value="<{$adRe['id']}>" />
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道统计配置添加");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform"});
+        $("#weight").formValidator({onshow:"请输入权重值",onfocus:"权重值不能为空"}).inputValidator({regexp:"notempty",datatype:"enum",onerror:"权重值不能为空"});
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">渠道统计配置</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/channel_s_set/"><em>渠道统计配置</em></a>
+        <span>|</span>
+        <a href="/admin/channel_s_set/add"><em>渠道统计配置添加</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/channel_s_set/edit" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="150">渠道号：</th>
+                <td class="y-bg"><{$channelSetRe['channel']}></td>
+            </tr>
+            <tr>
+                <th width="150">权重值(范围 1%-300%)：</th>
+                <td class="y-bg">
+                    <input type="text" class="input-text" name="weight" id="weight" value="<{$channelSetRe['weight']}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">状态：</th>
+                <td class="y-bg"><{$channelStatus[$channelSetRe['status']]}></td>
+            </tr>
+            <tr>
+                <th width="100">操作人：</th>
+                <td class="y-bg"><{$channelSetRe['operat']}></td>
+            </tr>
+            <tr>
+                <th width="100">操作时间：</th>
+                <td class="y-bg"><{$channelSetRe['operatetime']}></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="hidden" id="sid" name="sid" value="<{$channelSetRe['id']}>" />
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

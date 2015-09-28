@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道统计配置添加");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform"});
+        $("#tid").formValidator({onshow:"请输入帖子ID",onfocus:"帖子ID不能为空"}).inputValidator({regexp:"notempty",datatype:"enum",onerror:"帖子ID不能为空"}).ajaxValidator({
+            type : "get",
+            url : "/admin/thread_raffle/raffle?ajax=tid",
+            data :"",
+            datatype : "html",
+            async:'false',
+            success : function(data){
+                if( data == "1" ){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            buttons: $("#dosubmit"),
+            onerror : "帖子ID不存在"
+        });
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">帖子抽奖</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/thread_raffle/raffle" class="on"><em>帖子抽奖</em></a>
+        <span>|</span>
+        <a href="/admin/thread_raffle/"><em>帖子抽奖记录</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/thread_raffle/raffle" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="150">帖子ID：</th>
+                <td class="y-bg"><input type="text" class="input-text" name="tid" id="tid" /></td>
+            </tr>
+            <tr>
+                <th width="150">中奖人数：</th>
+                <td class="y-bg"><input type="text" class="input-text" name="num" id="num" /></td>
+            </tr>
+            <tr>
+                <th width="150">是否有图：</th>
+                <td class="y-bg">
+                    <input type="radio" value="0" checked="" name="is_images">
+                    否
+                    <input type="radio" value="1" name="is_images">
+                    是
+                </td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="抽奖" />
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">管理员管理——(<{$truename}>)</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/manage/"><em>管理员列表</em></a>
+        <span>|</span>
+        <a href="/admin/manage/add"><em>添加管理员</em></a></div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/manage/permission?uid=<{$admin_uid}>" method="post" autocomplete="off" id="myform">
+        <table width="100%"  class="table_form">
+            <{if $get_menus_1 }>
+            <tr>
+                <th width="80" ><{$get_menu_name[1]}>：</th>
+                <td>
+                    <{foreach from=$get_menus_1 item=item key=key}>
+                    <label><input name="permission_1[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>
+                    <{/foreach}>
+                </td>
+            </tr>
+            <{/if}>
+
+            <{if $get_menus_2 }>
+            <tr>
+                <th width="80" ><{$get_menu_name[2]}>：</th>
+                <td>
+                    <{foreach from=$get_menus_2 item=item key=key}>
+                    <label><input name="permission_2[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>
+                    <{/foreach}>
+                </td>
+            </tr>
+            <{/if}>
+
+            <{if $get_menus_3 }>
+            <tr>
+                <th width="80" ><{$get_menu_name[3]}>：</th>
+                <td>
+                    <{foreach from=$get_menus_3 item=item key=key}>
+                    <label><input name="permission_3[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>
+                    <{/foreach}>
+                </td>
+            </tr>
+            <{/if}>
+
+            <{if $get_menus_100 }>
+            <tr>
+                <th width="80" ><{$get_menu_name[100]}>：</th>
+                <td>
+                    <{foreach from=$get_menus_100 item=item key=key}>
+                    <{if not ($item == 21 and $admin_uid == 1)}>
+
+                    <label><input name="permission_100[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>
+                    <{/if}>
+
+                    <{/foreach}>
+                </td>
+            </tr>
+            <{/if}>
+
+            <{if $get_menus_39 }>  <!--尾标是tab页的数据库id-->
+            <tr>
+                <th width="80" ><{$get_menu_name[39]}>：</th>
+                <td>
+                    <{foreach from=$get_menus_39 item=item key=key}>
+                    <label><input name="permission_39[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>
+                    <{/foreach}>
+                </td>
+            </tr>
+            <{/if}>
+
+            <!--增加tab页时使用-->
+            <!--<{if $get_menus_6 }> -->
+            <!--<tr>-->
+                <!--<th width="80" ><{$get_menu_name[6]}>：</th>-->
+                <!--<td>-->
+                    <!--<{foreach from=$get_menus_6 item=item key=key}>-->
+                    <!--<label><input name="permission_6[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>-->
+                    <!--<{/foreach}>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<{/if}>-->
+
+            <!--<{if $get_menus_7 }>-->
+            <!--<tr>-->
+                <!--<th width="80" ><{$get_menu_name[7]}>：</th>-->
+                <!--<td>-->
+                    <!--<{foreach from=$get_menus_7 item=item key=key}>-->
+                    <!--<label><input name="permission_7[]" type="checkbox" value="<{$item}>" <{if in_array($item, $get_permission)}>checked="true"<{/if}>/><{$get_menu_name[$item]}></label>-->
+                    <!--<{/foreach}>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<{/if}>-->
+
+        </table>
+        <div class="bk15"></div>
+        <input type="hidden"  name="uid" value="<{$admin_uid}>" />
+        <input type="submit" class="button" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

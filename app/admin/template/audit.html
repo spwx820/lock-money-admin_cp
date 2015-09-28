@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/admin_common.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("审核操作");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script type="text/javascript">
+    function sures()
+    {
+        if(confirm('拒绝操作请确定后继续？')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+</script>
+<div class="pad-lr-10">
+    <h2 class="title-1 line-x f14 fb blue lh28">用户ID：<{$userRe['uid']}><{if 1 == $isException}>(校园)<{/if}></h2>
+    <table width="100%"  class="table_form">
+        <tr>
+            <td>用户手机号：</td>
+            <td align="left"><{$userRe['pnum']}></td>
+            <td>设备号：</td>
+            <td align="left">
+                <{if 1 == $deviceTag}>
+                    <span class="red"><{$userRe['device_id']}></span>
+                <{else}>
+                    <{$userRe['device_id']}>
+                <{/if}>
+            </td>
+            <td>imsi号：</td>
+            <td align="left"><{$userRe['imsi']}></td>
+        </tr>
+        <tr>
+            <td>状态：</td>
+            <td align="left"><{$userStatus[$userRe['status']]}></td>
+            <td>密码：</td>
+            <td><{substr($userRe['password'],0,5)}></td>
+            <td>邀请码：</td>
+            <td align="left"><{$userRe['invite_code']}></td>
+        </tr>
+        <tr>
+            <td>注册时间：</td>
+            <td align="left"><{$userRe['ctime']}></td>
+            <td>注册IP：</td>
+            <td align="left"></td>
+            <td>更新时间：</td>
+            <td align="left"><{$userRe['update_time']}></td>
+        </tr>
+        <tr>
+            <td>余额<span class="blue ">(单位:分)</span>：</td>
+            <td align="left"><{$userRe['score']}></td>
+            <td>广告金额<span class="blue ">(单位:分)</span>：</td>
+            <td align="left"><{$userRe['score_ad']}></td>
+            <td>右滑金额<span class="blue ">(单位:分)</span>：</td>
+            <td align="left"><{$userRe['score_right_catch']}></td>
+        </tr>
+        <tr>
+            <td>邀请金额<span class="blue ">(单位:分)</span>：</td>
+            <td align="left"><{$userRe['score_register']}></td>
+            <td>其他金额<span class="blue ">(单位:分)</span>：</td>
+            <td align="left"><{$userRe['score_other']}></td>
+            <td>任务金额<span class="blue ">(单位:分)</span>：</td>
+            <td><{$userRe['score_task']}></td>
+        </tr>
+    </table>
+    <table width="100%"  class="table_form">
+        <tr>
+            <td  class="title-1 line-x f14 fb blue lh28" >兑换ID：</td>
+            <td align="left" width="60"><{$exchangeRe['id']}></td>
+            <td  class="title-1 line-x f14 fb blue lh28">充值信息：</td>
+            <td align="left" width="100"><{$exchangeRe['pay_content']}></td>
+            <td class="title-1 line-x f14 fb blue lh28">同UID充值数：</td>
+            <td align="left" width="30"><{$exchangeUidCount}></td>
+            <td class="title-1 line-x f14 fb blue lh28">同手机号充值数：</td>
+            <td align="left" width="30"><{$exchangePayCount}></td>
+            <td  class="title-1 line-x f14 fb blue lh28" >此交易金额(单位:分)：</td>
+            <td align="left" width="80"><{$exchangeRe['pay']}></td>
+            <td  class="title-1 line-x f14 fb blue lh28" >兑换类型：</td>
+            <td align="left"><{$payType[$exchangeRe['ptype']]}></td>
+        </tr>
+    </table>
+    <table width="100%"  class="table_form">
+        <tr>
+            <td align="left" class="title-1 line-x f14 fb blue lh28">记录总数：<{$inviteCount}></td>
+            <td align="left" class="title-1 line-x f14 fb blue lh28">兑换状态：<{$exchangeHStatus}></td>
+            <{if !empty($exchangeHRemark)}>
+            <td align="left" class="title-1 line-x f14 fb blue lh28">暂缓说明：<{$exchangeHRemark}></td>
+            <{/if}>
+            <td align="right" width="60">审核操作：</td>
+            <td align="right" width="60">
+                <form action="/admin/audit/audit" method="post">
+                    <input type="hidden" name="audit" value="3" />
+                    <input type="hidden"  name="pay_id" value="<{$payId}>"/>
+                    <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                    <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                    <input type="submit" class="button" name="dosubmit" value="退款" />
+                </form>
+            </td>
+            <td align="right" width="60" class="content-menu ib-a blue line-x">
+                <a class="add fb" href="javascript:window.top.art.dialog({id:'audithold',iframe:'/admin/audit/audithold?pay_id=<{$exchangeRe['id']}>', title:'暂缓', width:'400', height:'140', lock:true}, function(){var d = window.top.art.dialog({id:'audithold'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();
+                window.location = '/admin/audit/?page=<{$listpage}>&action_pay_type=<{$auditPayType}>'; return false;}, function(){window.top.art.dialog({id:'audithold'}).close()});void(0);"><em>暂缓</em></a>
+            </td>
+            <td align="right" width="60">
+                <form action="/admin/audit/audit" method="post" onsubmit="return sures()">
+                    <input type="hidden" name="audit" value="2" />
+                    <input type="hidden"  name="pay_id" value="<{$payId}>" />
+                    <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                    <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                    <input type="submit" class="button" name="dosubmit" value="封号" />
+                </form>
+            </td>
+            <td align="right" width="60">
+                <form action="/admin/audit/audit" method="post">
+                    <input type="hidden" name="audit" value="1" />
+                    <input type="hidden"  name="pay_id" value="<{$payId}>" />
+                    <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                    <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                    <input type="submit" class="button" name="dosubmit" value="通过" />
+                </form>
+            </td>
+            <{if $nextPay}>
+            <td align="right" width="60">
+                <a target="_self" href="/admin/audit/audit?pay_id=<{$nextPay}>&listpage=<{$listpage}>&pay_type=<{$auditPayType}>">下一个</a>
+            </td>
+            <{/if}>
+        </tr>
+    </table>
+    <table width="100%"  class="table_form">
+        <tr>
+            <td align="left" class="y-bg">总金额大于600用户数：<{$inviteCountRe['600p']}></td>
+            <td align="left" class="y-bg">总金额大于520用户数：<{$inviteCountRe['520p']}></td>
+            <td align="left" class="y-bg">总金额大于500用户数：<{$inviteCountRe['500p']}></td>
+            <td align="left" class="y-bg">右滑金额用户数：<{$inviteCountRe['has_rcatch']}></td>
+            <td align="left" class="y-bg">右滑金额大于20用户数：<{$inviteCountRe['has_3rcatch']}></td>
+        </tr>
+        <tr>
+            <td align="left" class="y-bg">广告金额用户数：<{$inviteCountRe['has_ad']}></td>
+            <td align="left" class="y-bg">注册金额用户数：<{$inviteCountRe['has_invitation']}></td>
+            <td align="left" class="y-bg">最小金额：<{$inviteCountRe['MIN']}></td>
+            <td align="left" class="y-bg">最大金额：<{$inviteCountRe['MAX']}></td>
+            <td align="left" class="y-bg">平均金额：<{$inviteCountRe['AVG']}></td>
+        </tr>
+    </table>
+    <div class="table-list">
+        <{if $inviteList}>
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left" width="60">邀请人ID</th>
+                <th align="left">手机号</th>
+                <th align="left">设备号</th>
+                <th align="left">imsi号</th>
+                <th align="left">密码</th>
+                <th align="left">注册时间</th>
+                <th align="left">注册IP</th>
+                <th align="left">更新时间</th>
+                <th align="left">余额</th>
+                <th align="left" width="60">广告金额</th>
+                <th align="left" width="60">右滑金额</th>
+                <th align="left" width="60">注册金额</th>
+                <th align="left" width="60">其他金额</th>
+                <th align="left" width="60">任务金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{foreach from=$inviteList item=item key=key}>
+            <{if !empty($lastValidTime) && $lastValidTime >= $item.ctime}>
+            <tr style="background: none repeat scroll 0 0 #dddddd;">
+            <{else}>
+            <tr>
+            <{/if}>
+                <td align="center"><{$item.uid}><{if $item.hold == 1}><a title="">*</a><{/if}></td>
+                <td align="left"><{$item.pnum}></td>
+                <td align="left"><{$item.device_id}></td>
+                <td align="left"><{$item.imsi}></td>
+                <!--<td align="left"><{$userStatus[$item.status]}></td>-->
+                <td align="left"><{substr($item.password,0,5)}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left"><{$item.register_ip}></td>
+                <td align="left"><{$item.update_time}></td>
+                <td align="left"><{$item.score}></td>
+                <td align="left"><{$item.score_ad}></td>
+                <td align="left"><{$item.score_right_catch}></td>
+                <td align="left"><{$item.score_register}></td>
+                <td align="left"><{$item.score_other}></td>
+                <td align="left"><{$item.score_task}></td>
+            </tr>
+            <{/foreach}>
+            </tbody>
+        </table>
+        <div id="pages"><{$invitePages}></div>
+        <div>
+            <table width="100%"  class="table_form">
+                <tr>
+                    <td align="left" class="title-1 line-x f14 fb blue lh28">记录总数：<{$inviteCount}></td>
+                    <td align="left" class="title-1 line-x f14 fb blue lh28">兑换状态：<{$exchangeHStatus}></td>
+                    <{if !empty($exchangeHRemark)}>
+                    <td align="left" class="title-1 line-x f14 fb blue lh28">暂缓说明：<{$exchangeHRemark}></td>
+                    <{/if}>
+                    <td align="right" width="60">审核操作：</td>
+                    <td align="right" width="60">
+                        <form action="/admin/audit/audit" method="post">
+                            <input type="hidden" name="audit" value="3" />
+                            <input type="hidden"  name="pay_id" value="<{$payId}>"/>
+                            <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                            <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                            <input type="submit" class="button" name="dosubmit" value="退款" />
+                        </form>
+                    </td>
+                    <td align="right" width="60" class="content-menu ib-a blue line-x">
+                        <a class="add fb" href="javascript:window.top.art.dialog({id:'audithold',iframe:'/admin/audit/audithold?pay_id=<{$exchangeRe['id']}>', title:'暂缓', width:'400', height:'140', lock:true}, function(){var d = window.top.art.dialog({id:'audithold'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();
+                window.location = '/admin/audit/?page=<{$listpage}>&action_pay_type=<{$auditPayType}>'; return false;}, function(){window.top.art.dialog({id:'audithold'}).close()});void(0);"><em>暂缓</em></a>
+                    </td>
+                    <td align="right" width="60">
+                        <form action="/admin/audit/audit" method="post" onsubmit="return sures()">
+                            <input type="hidden" name="audit" value="2" />
+                            <input type="hidden"  name="pay_id" value="<{$payId}>" />
+                            <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                            <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                            <input type="submit" class="button" name="dosubmit" value="封号" />
+                        </form>
+                    </td>
+                    <td align="right" width="60">
+                        <form action="/admin/audit/audit" method="post">
+                            <input type="hidden" name="audit" value="1" />
+                            <input type="hidden"  name="pay_id" value="<{$payId}>" />
+                            <input type="hidden"  name="listpage" value="<{$listpage}>"/>
+                            <input type="hidden"  name="pay_type" value="<{$auditPayType}>"/>
+                            <input type="submit" class="button" name="dosubmit" value="通过" />
+                        </form>
+                    </td>
+                    <{if $nextPay}>
+                    <td align="right" width="60">
+                        <a target="_self" href="/admin/audit/audit?pay_id=<{$nextPay}>&listpage=<{$listpage}>&pay_type=<{$auditPayType}>">下一个</a>
+                    </td>
+                    <{/if}>
+                </tr>
+            </table>
+        </div>
+        <{/if}>
+    </div>
+</div>
+</body>
+</html>

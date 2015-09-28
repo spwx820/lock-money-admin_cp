@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("编辑消息");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+
+
+    <script>
+        function t(obj)
+        {
+            if(obj.value == "0") {
+                document.getElementById("uids").style.display  = "";
+                document.getElementById("uid_end").style.display  = "none";
+            }
+            else{
+                document.getElementById("uids").style.display = "none";
+                document.getElementById("uid_end").style.display  = "";
+            }
+        }
+        function is_rate_all(evt) {
+            key = document.getElementById("rate_all");
+            objName = document.getElementsByName("rate[]");
+            if (key.checked) {
+                for (var i = 0; i < objName.length; i++) {
+                    objName[i].checked = true;
+                }
+            }
+            else {
+                for (var i = 0; i < objName.length; i++) {
+                    objName[i].checked = false;
+                }
+            }
+        }
+    </script>
+
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    function sures()
+    {
+        if(confirm('请确定提交内容后继续？')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">消息管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/message/" ><em>消息记录</em></a>
+        <span>|</span>
+        <a href="/admin/message/add"><em>消息添加</em></a>
+        <span>|</span>
+        <a href="/admin/message/edit?mid=<{$getMessage.id}>" class="on"><em>消息编辑</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form name="request_message" action="/admin/message/edit" enctype="multipart/form-data" autocomplete="off" method="post" id="myform" onsubmit="return sures()">
+        <table width="100%"  class="table_form">
+
+            <tr>
+                <th width="100">操作系统：</th>
+                <td class="y-bg">
+                    <select name="message_os">
+                        <option value='' >请选择系统</option>
+                        <{if $messageOs}>
+                        <{foreach from=$messageOs item=item key=key}>
+                            <{if $getMessage.os_type == $key}>
+                            <option value='<{$key}>' selected><{$item}></option>
+                            <{else}>
+                            <option value='<{$key}>' ><{$item}></option>
+                            <{/if}>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>消息类型：</th>
+                <td class="y-bg">
+                    <{if $getMessage.message_type == 1}>公共<{else}>私有<{/if}>
+
+                </td>
+            </tr>
+            <{if $getMessage.message_type == 0}>
+
+            <tr id="uids">
+                <th width="100">用户ID(私有消息)：</th>
+                <td class="y-bg">
+                    <textarea style="height:160px; width:30%" name="uid_batch" id="uid_batch"><{$uidBatch}></textarea> 建议不超过2000,请使用逗号分隔  如 46465646,34525424
+                </td>
+            </tr>
+            <{/if}>
+
+            <{if $getMessage.message_type == 1}>
+            <tr id="uid_end" >
+                <th width="80">投放尾号：</th>
+                <td class="y-bg">
+                    <label><input name="rate[]" type="checkbox" value="0" />0 </label>
+                    <label><input name="rate[]" type="checkbox" value="1" />1 </label>
+                    <label><input name="rate[]" type="checkbox" value="2" />2 </label>
+                    <label><input name="rate[]" type="checkbox" value="3" />3 </label>
+                    <label><input name="rate[]" type="checkbox" value="4" />4 </label>
+                    <label><input name="rate[]" type="checkbox" value="5" />5 </label>
+                    <label><input name="rate[]" type="checkbox" value="6" />6 </label>
+                    <label><input name="rate[]" type="checkbox" value="7" />7 </label>
+                    <label><input name="rate[]" type="checkbox" value="8" />8 </label>
+                    <label><input name="rate[]" type="checkbox" value="9" />9 </label>
+                    <span>|</span>
+                    <label><input name="rate_all" type="checkbox" id="rate_all" value="10" onclick="is_rate_all(this)"/>全选 </label>
+                </td>
+            </tr>
+            <{/if}>
+
+            <tr>
+                <th>是否通知：</th>
+                <td class="y-bg">
+                    <{if $getMessage.info_notify == 1}>
+                    <input type="radio" name="info_notify" checked="" value="1">
+                    是
+                    <input type="radio" name="info_notify"  value="0">
+                    否
+                    <{else}>
+                    <input type="radio" name="info_notify" value="1">
+                    是
+                    <input type="radio" name="info_notify" checked="" value="0">
+                    否
+                    <{/if}>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">上传文件：</th>
+                <td class="y-bg">
+                    <{if $getMessage.url_images}>
+                    <img src="<{$getMessage.url_images}>" width="200" height="100"><br/><br/>
+                    <{$getMessage.url_images}><br/><br/>
+                    <{/if}>
+                    <input type="file" name="file_uplode" id="file_uplode"/>
+                    <em class="red">(小提示：私有消息暂时不读取图片)</em>
+                </td>
+            </tr>
+            <link href="/js/calendars/jscal2.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/border-radius.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/win2k.css" type="text/css" rel="stylesheet">
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/lang/en.js" type="text/javascript"></script>
+            <tr>
+                <th width="100">上线时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="start_date" id="start_date" class="date input-text" type="text" readonly="" size="18">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        date = new Date();document.getElementById ("start_date").value="<{$getMessage.start_date}>";
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "start_date",
+                            trigger : "start_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">下线时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="end_date" id="end_date" class="date input-text" type="text" readonly="" size="18">
+                    <em class="red">*(小提示：下线时间同时为API过期时间)</em>
+                    <script type="text/javascript">
+                        date = new Date();document.getElementById ("end_date").value="<{$getMessage.end_time}>";
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "end_date",
+                            trigger : "end_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th>标&nbsp;&nbsp;&nbsp;题：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="info_title"  id="info_title" value="<{$getMessage.info_title}>"/>
+                </td>
+            </tr>
+            <tr>
+                <th>内&nbsp;&nbsp;&nbsp;容：</th>
+                <td class="y-bg"><textarea style="height:100px; width:30%" name="content" id="content"><{$getMessage.content}></textarea></td>
+            </tr>
+            <tr>
+                <th>分享内容：</th>
+                <td class="y-bg"><textarea style="height:100px; width:30%" name="share_msg" id="share_msg"><{$getMessage.share_msg}></textarea></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg">
+                    <input type="hidden" id="mid" name="mid" value="<{$getMessage.id}>" />
+                    <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+                </td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+</body>
+</html>

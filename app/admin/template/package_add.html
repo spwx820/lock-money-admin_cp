@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("打包添加");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">打包管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/package/" ><em>打包记录</em></a>
+        <span>|</span>
+        <a href="/admin/package/add" class="on"><em>打包添加</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form name="request_message" action="/admin/package/add" method="post" id="myform" >
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="80">邀请码：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="uid"  id="uid" /></td>
+            </tr>
+            <tr>
+                <th width="100">操作系统：</th>
+                <td class="y-bg">
+                    <select name="pk_os">
+                        <option value='' >请选择系统</option>
+                        <{if $pkOs}>
+                        <{foreach from= $pkOs item=item key=key}>
+                        <option value='<{$key}>'><{$item}></option>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="80">渠道号：</th>
+                <td class="y-bg">
+                    <select name="channel_id" id="channel_id">
+                        <option value="0">请选择渠道</option>
+                        <{if $channelSelect}>
+                            <{foreach from=$channelSelect item=item key=key}>
+                            <option value="<{$item.id}>"><{$item.channel}></option>
+                            <{/foreach}>
+                        <{/if}>
+                    </select>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="80">隐藏邀请码：</th>
+                <td class="y-bg">
+                    <input type="radio" name="is_hidden_invite"  value="1">
+                    是
+                    <input type="radio" name="is_hidden_invite" checked="" value="0">
+                    否
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg"><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" /></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+</body>
+</html>

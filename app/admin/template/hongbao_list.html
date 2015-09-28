@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("群发红包");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">群发红包</h2>
+    <div class="rt">
+        <form action="/admin/hongbao/" method="post" name="form_member_search">
+            添加时间：
+            <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+            <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+            <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+            <script language="javascript" type="text/javascript">
+                date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                Calendar.setup({
+                    inputField     :    "start_time",
+                    ifFormat       :    "%Y-%m-%d",
+                    showsTime      :    false,
+                    timeFormat     :    "24"
+                });
+            </script>
+            <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+            <script language="javascript" type="text/javascript">
+                date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                Calendar.setup({
+                    inputField     :    "end_time",
+                    ifFormat       :    "%Y-%m-%d",
+                    showsTime      :    false,
+                    timeFormat     :    "24"
+                });
+            </script>
+            <input name="keyword" type="text" value="<{$keyword}>" class="input-text" />
+            <input type="submit" name="search" class="button" value="搜索" />
+        </form>
+    </div>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/hongbao/" class="on"><em>群发红包记录</em></a>
+        <span>|</span>
+        <a href="/admin/hongbao/add"><em>群发红包</em></a>
+        <{if in_array($adminId,array(1))}>
+        <span>|</span>
+        <a href="/admin/hongbao/test"><em>test</em></a>
+        <{/if}>
+
+    </div>
+</div>
+<div class="pad-lr-10" style="position:relative;">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="left">用户ID</th>
+                <th align="left">发送内容</th>
+                <th align="left">金额(单位：分)</th>
+                <th align="left">是否分享</th>
+                <th align="left">状态</th>
+                <th align="left">操作人</th>
+                <th align="left">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $hongbaoList}>
+            <{foreach from=$hongbaoList item=item key=key}>
+            <tr>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.content}></td>
+                <td align="left"><{$item.score}></td>
+                <td align="left"><{$publicRadio[$item.allow_share_msg]}></td>
+                <td align="left" title="<{$item.wrong_msg}>"><{$honbaoStatus[$item.status]}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            <tr>
+                <th align="left">小计: (分)</th>
+                <th></th>
+                <th></th>
+
+                <th align="left"><{$sum_cur}> </th>
+            </tr>
+            <tr>
+                <th align="left">总计: (分)</th>
+                <th></th>
+                <th></th>
+
+                <th align="left"><{$sum_all}> </th>
+            </tr>
+            </tbody>
+        </table>
+        <div id="pages"><{$hongbaoPages}></div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

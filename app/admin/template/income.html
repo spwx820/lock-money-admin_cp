@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("收益统计");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">收益统计</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/income/" method="post" name="form_member_search">
+                时间搜索：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/income/" class="on">
+            <em>收益统计</em>
+        </a><span>|</span>
+        <a href="/admin/income/type">
+            <em>动作收益统计</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">ID</th>
+                <th align="left">时间</th>
+                <th align="left">应用下载</th>
+                <th align="left">划屏加分(单位:元)</th>
+                <th align="left">邀请好友(单位:元)</th>
+                <th align="left">其他收益(单位:元)</th>
+                <th align="left">任务收益(单位:元)</th>
+                <th align="left">兑换(单位:元)</th>
+                <th align="left">退款(单位:元)</th>
+                <th align="left">总计金额(单位:元)</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $incomeList}>
+            <{foreach from=$incomeList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.cdate}></td>
+                <td align="left"><{$item.score_ad/100}></td>
+                <td align="left"><{$item.score_right_catch/100}></td>
+                <td align="left"><{$item.score_register/100}></td>
+                <td align="left"><{$item.score_other/100}></td>
+                <td align="left"><{$item.score_task/100}></td>
+                <td align="left"><{$item.score_exchange/100}></td>
+                <td align="left"><{$item.score_refund/100}></td>
+                <td align="left"><{$item.score/100}></td>
+                <td align="left">
+                    <a href="/admin/income/type?cdate=<{$item.cdate}>">[动作]</a>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$incomePages}></div>
+    </div>
+</div>
+</body>
+</html>

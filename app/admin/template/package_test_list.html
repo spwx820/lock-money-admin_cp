@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("测试包管理");
+        })
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">测试包管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/package_test/" method="post" name="form_member_search">
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $packageOs}>
+                    <{foreach from=$packageOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_status">
+                    <option value='' >请选择状态</option>
+                    <{if $packageStatus}>
+                    <{foreach from=$packageStatus item=item key=key}>
+                    <{if is_numeric($actionStatus) && $actionStatus == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/package_test/" class="on"><em>测试包管理</em></a>
+        <span>|</span>
+        <a href="/admin/package_test/add"><em>上传Android测试包</em></a>
+        <span>|</span>
+        <a href="/admin/package_test/addIos"><em>上传IOS测试包</em></a>
+        <em class="red">(小提示：测试包5分钟后才能下载)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">ID</th>
+                <th align="left">版本号</th>
+                <th align="left">下载URL</th>
+                <th align="left">系统</th>
+                <th align="left" width="60">投放比例</th>
+                <th align="left" width="50">状态</th>
+                <th align="left">上架时间</th>
+                <th align="left">下架时间</th>
+                <th align="left">创建时间</th>
+                <th align="left">更新时间</th>
+                <th align="left" width="170">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $packageList}>
+            <{foreach from=$packageList item=item key=key}>
+            <{if $item.status ==1 && 1 == $item.isvalid}>
+            <tr style="background: none repeat scroll 0 0 #DBFCA3;">
+            <{else}>
+            <tr>
+            <{/if}>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.pk_version}></td>
+                <td align="left"><{$item.pk_url}></td>
+                <td align="left"><{$packageOs[$item.pk_os]}></td>
+                <td align="left"><{$packageScale[$item.scale]}></td>
+                <td align="left">
+                    <{if 1 != $item.isvalid}>
+                    <span class="red">过期</span>
+                    <{else}>
+                    <{$packageStatus[$item.status]}>
+                    <{/if}>
+                </td>
+                <td align="left"><{$item.start_date}></td>
+                <td align="left"><{$item.end_date}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left"><{$item.updatetime}></td>
+                <td align="left">
+                    <{if 0 == $item.status && 1 == $item.isvalid && in_array($adminId,array(1,2,3,4,5))}>
+                        <a href="/admin/package_test/audit?pk_id=<{$item.id}>&page=<{$page}>">[审核]</a>
+                        &nbsp;|&nbsp;
+                    <{/if}>
+                    <{if $item.pk_os == 1}>
+                    <a href="/admin/package_test/edit?id=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    &nbsp;|&nbsp;
+                    <a href= <{if !empty($item.clear_cdn)}>"#" <{else}>"/admin/package_test/clearCache?pk_id=<{$item.id}>&page=<{$page}>" onclick="return confirm('您确定要清除cdn缓存吗？')" <{/if}>  <{if !empty($item.clear_cdn)}>  style="color: #ccc" <{/if}>>[清除cdn缓存]</a>&nbsp;|&nbsp;
+
+
+                    <{else}>
+                    <a href="/admin/package_test/editIos?id=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    <{/if}>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$packagePages}></div>
+    </div>
+</div>
+</body>
+</html>

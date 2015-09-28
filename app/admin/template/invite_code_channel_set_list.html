@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">
+        邀请码配置
+    </h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form name="form_search" method="post" action="/admin/channel_set/">
+                <input class="input-text" type="text" value="<{$keyword}>" name="keyword">
+                <input class="button" type="submit" value="搜索" name="search">
+             </form>
+        </div>
+        <a href="/admin/invite_code_channel_set/" class="on">
+            <em>邀请码配置</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/invite_code_channel_set/add" >
+            <em>邀请码配置添加</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">序号</th>
+                <th align="left">邀请码</th>
+                <th align="left">权重值 %</th>
+                <th align="left">金额(: 分)</th>
+
+                <th align="left">备注</th>
+                <th align="left">状态</th>
+                <th align="left">操作人</th>
+                <th align="left">操作时间</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $channelList}>
+            <{foreach from=$channelList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.code_channel}></td>
+                <td align="left"><{$item.weight}></td>
+                <td align="left"><{$item.currency}></td>
+
+                <td align="left"><{$item.remark}></td>
+                <td align="left"><{$channelStatus[$item.status]}></td>
+                <td align="left"><{$item.operator}></td>
+                <td align="left"><{$item.operate_time}></td>
+                <td align="left">
+                    <{if in_array($adminId,array(1,2,3,4,5))}>
+
+                    <{if 1 == $item.status}>
+                    <a href="/admin/invite_code_channel_set/shut?id=<{$item.id}>">[关闭]</a>
+                    <{else}>
+                    <a href="/admin/invite_code_channel_set/open?id=<{$item.id}>">[开启]</a>
+                    <{/if}>&nbsp;|&nbsp;
+                    <a href="/admin/invite_code_channel_set/edit?channel_id=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    <{/if}>
+                    &nbsp;|&nbsp;
+                    <a href="/admin/invite_code_channel_set/clearCache" onclick="return confirm('您确定要清除redis缓存吗？')">[清除redis缓存]</a>
+
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$channelPages}></div>
+    </div>
+</div>
+</body>
+</html>

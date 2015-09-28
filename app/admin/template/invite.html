@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("邀请统计");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">邀请统计(昨日TOP100)</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/invite/" method="post" name="form_member_search">
+                时间搜索：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="search_time" id="search_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("search_time").value="";
+                    Calendar.setup({
+                        inputField     :    "search_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/invite/" class="on">
+            <em>邀请统计</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">序号</th>
+                <th align="left">邀请号</th>
+                <th align="left">手机号码</th>
+                <th align="left">用户总数</th>
+                <th align="left">余额</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $inviteList}>
+            <{foreach from=$inviteList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.num}></td>
+                <td align="left"><a href="/admin/user/detail?uid=<{$item.invite_code}>" target="_blank"><{$item.invite_code}></a></td>
+                <td align="left"><{$item.pnum}></td>
+                <td align="left"><{$item.user_num}></td>
+                <td align="left"><{$item.score}></td>
+                <td align="left"><a href="/admin/invite/detail?code=<{$item.invite_code}>&date=<{$item.cdate}>">[详细]</a></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"></div>
+    </div>
+</div>
+</body>
+</html>

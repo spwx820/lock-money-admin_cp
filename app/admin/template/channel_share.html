@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/Chart.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道统计");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">渠道统计</h2>
+    <div class="content-menu ib-a blue line-x">
+
+        <a href="/admin/channel/" >
+            <em>渠道统计</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel/share_stat" class="on">
+            <em>分享渠道统计</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <canvas id="canvas1" height="450" width="600"></canvas>
+    <div> 二维码</div>
+    <canvas id="canvas2" height="450" width="600"></canvas>
+    <div> QQ空间</div>
+    <canvas id="canvas3" height="450" width="600"></canvas>
+    <div> QQ</div>
+    <canvas id="canvas4" height="450" width="600"></canvas>
+    <div> 微信</div>
+    <canvas id="canvas5" height="450" width="600"></canvas>
+    <div> 微博</div>
+    <canvas id="canvas6" height="450" width="600"></canvas>
+    <div> 短信</div>
+    <canvas id="canvas7" height="450" width="600"></canvas>
+    <div> 朋友圈</div>
+</div>
+
+</body>
+
+
+<script>
+
+    function create_chart() {
+
+
+        var func = ['get_share_qq', 'get_share_qq', 'get_share_qq', 'get_share_qq', 'get_share_qq', 'get_share_qq', 'get_share_qq']
+
+        for(var i = 0; i < 7; i++) {
+
+        $.ajax({
+            async: false,
+            url: "/admin/channel/" + func[i] + "?start=20150876",
+            success: function (data) {
+
+
+                    var result = {
+                        labels: [], datasets: [{
+                            label: "My First dataset",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(200,200,200,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: []
+                        }]
+                    };
+                    data = JSON.parse(data);
+                    for(var key in data){
+                        result.labels.push(key);
+                        result.datasets[0].data.push(data[key]);
+                    }
+                    var myLine = new Chart(document.getElementById("canvas" + (i + 1)).getContext("2d")).Line(result, { // 小提示的圆角
+                        pointHitDetectionRadius: 4});
+
+//                var date = new Date();
+//                var delay = (60 - date.getSeconds()) * 1000;
+//                _timeout = setTimeout(function () {
+//                    updateChart(selecor);
+//                    _interval = setInterval(updateChart, chart_option.delay, selecor);
+//                }, delay);
+
+            }
+        });
+        }
+    }
+
+    create_chart()
+
+</script>
+</html>

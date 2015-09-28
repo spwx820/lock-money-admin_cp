@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/clipboard/ZeroClipboard.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道统计API");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">渠道统计API</h2>
+    <div class="content-menu ib-a blue line-x">
+        <form action="/admin/channel_api/" method="post" name="form_member_search">
+            渠道号：<input name="channel" type="text" value="<{$channel}>" class="input-text"/>
+            <input type="submit" name="dosubmit" class="button" value="查询"/>
+        </form>
+    </div>
+    <br>
+    <div class="content-menu ib-a blue line-x">
+        <form action="/admin/channel_api/invite_code" method="post" name="form_member_search">
+            邀请码：<input name="invite_code" type="text" value="<{$invite_code}>" class="input-text"/>
+            <input type="submit" name="dosubmit" class="button" value="查询"/>
+        </form>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <{if $outUrl}>
+
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">渠道统计外部地址</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td align="left">
+                        <{$outUrl}>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <input id="copy_btn_channel" type="button" class="button_copy" value="复制" />
+                        <input id="copy_txt_channel" type="hidden" value="<{$outUrl}>" />
+                        <span id="copy_tag_channel"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <{/if}>
+
+        <{if $out_invite_code}>
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">邀请码统计外部地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td align="left">
+                    <{$out_invite_code}>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <input id="copy_btn_invite_code" type="button" class="button_copy_1" value="复制" />
+                    <input id="copy_txt_invite_code" type="hidden" value="<{$out_invite_code}>" />
+                    <span id="copy_tag_invite_code"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <{/if}>
+
+    </div>
+</div>
+<script language="JavaScript">
+    $(".button_copy").click(function(i){
+        var clip=null;
+        clip = new ZeroClipboard.Client();
+        clip.setHandCursor( true );
+        clip.setText( $("#copy_txt_channel").val() );
+        clip.addEventListener('complete', function (client, text) {
+            document.getElementById('copy_tag_channel').innerHTML ="ok";
+        });
+        clip.glue( 'copy_btn_channel');
+    });
+    $(".button_copy_1").click(function(i){
+        var clip=null;
+        clip = new ZeroClipboard.Client();
+        clip.setHandCursor( true );
+        clip.setText( $("#copy_txt_invite_code").val() );
+        clip.addEventListener('complete', function (client, text) {
+            document.getElementById('copy_tag_channel').innerHTML ="ok";
+        });
+        clip.glue( 'copy_btn_invite_code');
+    });
+</script>
+</body>
+</html>

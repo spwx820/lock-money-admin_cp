@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <title>管理中心</title>
+    <link href="/css/t_reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/zh-cn-system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/admin_common.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+</head>
+<body>
+<style type="text/css">
+    html{_overflow-y:scroll}
+</style>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+<!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform"});
+        $("#remark").formValidator({onshow:"请填写说明",onfocus:"说明不能为空"}).regexValidator({regexp:"notempty",datatype:"enum",onerror:"说明不能为空"});
+    })
+    //-->
+</script>
+<div class="pad-10">
+    <form action="/admin/audit_pay/refund"  method="post" id="myform" enctype="multipart/form-data">
+        <div>
+            <table width="100%"  class="table_form">
+                <tbody>
+                <tr>
+                    <th width="80" valign="top">说明：</th>
+                    <td class="y-bg"><textarea name="remark" id="remark" style="width:300px;height:100px;"></textarea></td>
+                </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="pay_id" value="<{$payId}>" />
+            <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交" />
+        </div>
+    </form>
+    <{if $setTimeOut == 1}>
+    <script style="text/javascript">window.top.art.dialog({id:"refundld"}).close();</script>
+    <{/if}>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("安装统计");})
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">打包管理<{if $tag}>(<{$tag}>)<{/if}></h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/package/"><em>打包记录</em></a><span>|</span>
+        <a href="/admin/package/add"><em>打包添加</em></a><span>|</span>
+        <a href="/admin/package/detail?id=<{$packageRe['id']}>" ><em>安装详细</em></a><span>|</span>
+        <a href="/admin/package/count?id=<{$packageRe['id']}>"  class="on"><em>安装统计</em></a>
+        <{if $outUrl}>
+            <span>|</span>
+            <a href="<{$outUrl}>" target="_blank"><em>统计外部URL</em></a>
+        <{/if}>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <{if $packageRe['uid']}>
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">时间</th>
+                <th align="left">用户ID</th>
+                <th align="left">安装数</th>
+                <th align="left">二次分享数</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $inviteList}>
+            <{foreach from=$inviteList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.cdate}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.num}></td>
+                <td align="left"><{$item.share_num}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <{elseif $packageRe['channel']}>
+            <table width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th align="left">渠道号</th>
+                    <th align="left">时间</th>
+                    <th align="left">用户总数(权重)</th>
+                    <th align="left">用户总数</th>
+                    <th align="left">活跃用户数(权重)</th>
+                    <th align="left">活跃用户数</th>
+                    <th align="left">邀请用户数(权重)</th>
+                    <th align="left">邀请用户数</th>
+                    <th align="left">设备激活数</th>
+                    <th align="left">设备访问数</th>
+                </tr>
+                </thead>
+                <tbody>
+                <{foreach from=$channelList item=item key=key}>
+                <{if $item.active_num_real < $item.user_num_real * 0.45}>
+                <tr style="background: none repeat scroll 0 0 #FFDEB1;">
+                    <{else}>
+                <tr>
+                    <{/if}>
+                    <td align="left"><{$item.channel}></td>
+                    <td align="left"><{$item.cdate}></td>
+                    <td align="left"><{$item.user_num}></td>
+                    <td align="left"><{$item.user_num_real}></td>
+                    <td align="left"><{$item.active_num}></td>
+                    <td align="left"><{$item.active_num_real}></td>
+                    <td align="left"><{$item.invited_num}></td>
+                    <td align="left"><{$item.invited_num_real}></td>
+                    <td align="left"><{$item.device_active_num}></td>
+                    <td align="left"><{$item.device_visit_num}></td>
+                </tr>
+                <{/foreach}>
+                </tbody>
+            </table>
+        <{/if}>
+        <div id="pages"><{$cPages}></div>
+    </div>
+</div>
+</body>
+</html>

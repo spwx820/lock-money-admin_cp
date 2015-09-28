@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("通知添加");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+        $("#title").formValidator({onshow:"请输入标题",onfocus:"标题限制在10-50个字符"}).inputValidator({min:10,max:50,onerror:"标题限制在10-50个字符"});
+        $("#subtitle").formValidator({onshow:"请输入副标题",onfocus:"副标题限制在10-50个字符"}).inputValidator({min:10,max:50,onerror:"副标题限制在10-50个字符"});
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">通知管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/notification/">
+            <em>通知管理</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_ios" >
+            <em>iOS通知添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_android" class="on">
+            <em>Android通知添加</em>
+        </a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/notification/add_android" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="100">通知标题：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="title" id="title" value="<{$acTitle}>"/></td>
+            </tr>
+            <tr>
+                <th width="100">通知副标题：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="subtitle" id="subtitle" value="<{$acSubtitle}>"/></td>
+            </tr>
+            <tr>
+                <th>类型：</th>
+                <td class="y-bg">
+                    <{if 1 == $acNType}>
+                    <input type="radio" name="n_type" checked="" value="1">公共
+                    <input type="radio" name="n_type"  value="0">私有
+                    <{else}>
+                    <input type="radio" name="n_type" value="1">公共
+                    <input type="radio" name="n_type" checked="" value="0">私有
+                    <{/if}>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">用户ID：</th>
+                <td class="y-bg">
+                    <textarea style="height:160px; width:30%" name="uid_batch" id="uid_batch"><{$acUidBatch}></textarea> 限制500个,请使用逗号分隔  如 46465646,34525424
+                </td>
+            </tr>
+            <tr>
+                <th width="100">类别：</th>
+                <td class="y-bg">
+                    <select name="ac">
+                        <option value=''>请选择类别</option>
+                        <{if $notificationType}>
+                        <{foreach from=$notificationType item=item key=key}>
+                            <{if $item.action == $acAc}>
+                            <option value='<{$item.action}>' selected><{$item.name}></option>
+                            <{else}>
+                            <option value='<{$item.action}>'><{$item.name}></option>
+                            <{/if}>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">消息：</th>
+                <td class="y-bg">
+                    <select name="message_id">
+                        <option value=''>请选择消息</option>
+                        <{if $publicMsg}>
+                        <{foreach from=$publicMsg item=item key=key}>
+                            <{if $item.id == $acMessageId}>
+                            <option value='<{$item.id}>' selected><{$item.info_title}></option>
+                            <{else}>
+                            <option value='<{$item.id}>' ><{$item.info_title}></option>
+                            <{/if}>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>
+                    <span class="red">(小提示：类别为消息详细页时填写)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">积分墙广告ID：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="ad_id" id="ad_id" value="<{$acAdId}>"/>
+                    <span class="red">(小提示：类别为应用详细页时填写)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">应用包名：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="ad_pack" id="ad_pack" value="<{$acAdPack}>"/>
+                    <span class="red">(小提示：类别为外部应用时填写)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">跳转链接：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="click_url" id="click_url" value="<{$acClickUrl}>"/>
+                    <span class="red">(小提示：类别为外部URL时填写)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">上传文件：</th>
+                <td class="y-bg">
+                    <input type="file" name="file_uplode" id="file_uplode"/>
+                </td>
+            </tr>
+            <tr>
+                <th>是否弹出：</th>
+                <td class="y-bg">
+                    <{if 1 == $acIsPopup}>
+                    <input type="radio" name="is_popup" value="0">否
+                    <input type="radio" name="is_popup" checked="" value="1">是
+                    <{else}>
+                    <input type="radio" name="is_popup" checked="" value="0">否
+                    <input type="radio" name="is_popup"  value="1">是
+                    <{/if}>
+                </td>
+            </tr>
+            <link href="/js/calendars/jscal2.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/border-radius.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/win2k.css" type="text/css" rel="stylesheet">
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/lang/en.js" type="text/javascript"></script>
+            <tr>
+                <th width="100">上线时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="start_date" id="start_date" class="date input-text" type="text" readonly="" size="21">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        date = new Date();document.getElementById ("start_date").value="<{$acStartDate}>";
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "start_date",
+                            trigger : "start_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">下线时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="end_date" id="end_date" class="date input-text" type="text" readonly="" size="21">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        date = new Date();document.getElementById ("end_date").value="<{$acEndDate}>";
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "end_date",
+                            trigger : "end_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">限制数量：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:10%" class="input-text" name="limit_num" id="limit_num" value="<{$acLimitNum}>"/>
+                    <span class="red">(小提示：私有通知数量设置大于300限制才会生效,公共通知设置无效)</span>
+                </td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

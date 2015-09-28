@@ -1,0 +1,8 @@
+/app/plist/*
+/config/*
+*~
+/.idea/*
+/cache/*
+/app/data/*
+/package/
+/plist/

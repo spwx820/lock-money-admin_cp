@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道配置");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">
+        渠道配置
+    </h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form name="form_search" method="post" action="/admin/channel_set/">
+                <input class="input-text" type="text" value="<{$keyword}>" name="keyword">
+                <input class="button" type="submit" value="搜索" name="search">
+             </form>
+        </div>
+        <a href="/admin/channel_set/" class="on">
+            <em>渠道配置</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel_set/add" >
+            <em>渠道配置添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel_set/appmarket">【小黑屋配置更新】</a>(小提示：10分钟后生效)
+
+        <span>|</span>
+        <a href="/admin/channel_set/ad_league" >
+            <em>联盟广告开关</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">序号</th>
+                <th align="left">渠道号</th>
+                <th align="left">上级渠道</th>
+                <th align="left">权重值</th>
+                <th align="left">备注</th>
+                <th align="left">状态</th>
+                <th align="left">操作人</th>
+                <th align="left">操作时间</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $channelList}>
+            <{foreach from=$channelList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.parent_channel}></td>
+                <td align="left"><{$item.weight}></td>
+                <td align="left"><{$item.remark}></td>
+                <td align="left"><{$channelStatus[$item.status]}></td>
+                <td align="left"><{$item.operat}></td>
+                <td align="left"><{$item.operattime}></td>
+                <td align="left">
+                    <{if 1 == $item.status}>
+                    <a href="/admin/channel_set/shut?id=<{$item.id}>">[关闭]</a>
+                    <{else}>
+                    <a href="/admin/channel_set/open?id=<{$item.id}>">[开启]</a>
+                    <{/if}>&nbsp;|&nbsp;
+                    <a href="/admin/channel_set/edit?channel_id=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$channelPages}></div>
+    </div>
+</div>
+</body>
+</html>

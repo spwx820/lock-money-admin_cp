@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("兑换记录");
+        })
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">兑换记录</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/exchange/" method="post" name="form_member_search">
+                兑换时间：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <select name="action_pay_type">
+                    <option value='' >请选择兑换类型</option>
+                    <{if $payType}>
+                    <{foreach from=$payType item=item key=key}>
+                    <{if is_numeric($actionPayType) && $actionPayType == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_pay_status">
+                    <option value='' >请选择兑换状态</option>
+                    <{if $payStatus}>
+                    <{foreach from=$payStatus item=item key=key}>
+                    <{if is_numeric($actionPayStatus) && $actionPayStatus == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <{if $exchangeSelect}>
+                <select name="action_type">
+                    <{foreach from=$exchangeSelect item=item key=key}>
+                    <{if is_numeric($actionType) && $actionType == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                </select>
+                <{/if}>
+                <input name="keyword" type="text" value="<{$keyword}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/exchange/" class="on">
+            <em>兑换记录</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/exchange/refund_list">
+            <em>退款记录</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+        <div class="table-list">
+            <table width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th align="left">兑换ID</th>
+                    <th align="left">物品ID</th>
+                    <th align="left">用户ID</th>
+                    <th align="left" width="150">设备号</th>
+                    <th align="left">充值信息</th>
+                    <th align="left">充值通道</th>
+                    <th align="left">实际支付金额</th>
+                    <th align="left">兑换类型</th>
+                    <th align="left">兑换状态</th>
+                    <th align="left">操作人</th>
+                    <th align="left">更新时间</th>
+                    <th align="left">充值时间</th>
+                    <th align="left">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <{foreach from=$exchangeList item=item key=key}>
+                <tr>
+                    <td align="left"><{$item.id}></td>
+                    <td align="left"><{$item.present_id}></td>
+                    <td align="left"><{$item.uid}></td>
+                    <td align="left" width="150"><{$item.device_id}></td>
+                    <td align="left"><{$item.pay_content}></td>
+                    <td align="left"><{$item.paychannel}></td>
+                    <td align="left"><{$item.pay}></td>
+                    <td align="left"><{$payType[$item.ptype]}></td>
+                    <td align="left" title="<{$item.remark}>"><{$payStatus[$item.pay_status]}></td>
+                    <td align="left"><{$item.admin}></td>
+                    <td align="left"><{$item.update_time}></td>
+                    <td align="left"><{$item.ctime}></td>
+                    <td align="left" class="content-menu ib-a blue line-x">
+                        <{if in_array($adminId,array(1,2,3,4,5,6,30))}>
+                            <{if 3 == $item.pay_status or 2 == $item.pay_status}>
+                            <a class="add fb" style="margin: 5px 0 0 0;" href="javascript:window.top.art.dialog({id:'refundld',iframe:'/admin/exchange/refund?pay_id=<{$item.id}>',title:'退款', width:'400', height:'165', lock:true},
+                            function(){var d = window.top.art.dialog({id:'refundld'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();
+                            window.location = '/admin/exchange/?page=<{$page}>&action_pay_type=<{$actionPayType}>&action_pay_status=<{$actionPayStatus}>'; return false;},
+                            function(){window.top.art.dialog({id:'refundld'}).close()});void(0);"><em>退款</em></a> |
+                            <{/if}>
+                        <{/if}>
+                        <a href="/admin/exchange/detail?id=<{$item.id}>&listpage=<{$page}>&pay_type=<{$actionPayType}>&pay_status=<{$actionPayStatus}>" title="<{$item.remark}>">[详细]</a>
+                    </td>
+                </tr>
+                <{/foreach}>
+                </tbody>
+            </table>
+            <div id="pages"><{$exchangePages}></div>
+        </div>
+</div>
+</body>
+</html>

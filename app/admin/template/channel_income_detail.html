@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道收益统计");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">
+        渠道收益统计
+    </h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt"></div>
+        <a href="/admin/channel_income/">
+            <em>渠道收益统计</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel_income/add" >
+            <em>渠道收益配置添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel_income/detail?id=<{$sid}>" class="on">
+            <em>渠道收益统计详细</em>
+        </a>
+        <span>|</span>
+        <em class="red">(小提示：只统计前200配置)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">渠道号</th>
+                <th align="left">注册日期</th>
+                <th align="left">注册人数</th>
+                <th align="left">统计日期</th>
+                <th align="left">用户广告总收入(单位:元)</th>
+                <th align="left">用户邀请总收入(单位:元)</th>
+                <th align="left">被邀请用户广告总收入(单位:元)</th>
+                <th align="left">被邀请用户邀请总收入(单位:元)</th>
+                <th align="left">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $channelIList}>
+            <{foreach from=$channelIList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.rdate}></td>
+                <td align="left"><{$item.rnum}></td>
+                <td align="left"><{$item.cdate}></td>
+                <td align="left"><{$item.score_ad/100}></td>
+                <td align="left"><{$item.score_register/100}></td>
+                <td align="left"><{$item.i_score_register/100}></td>
+                <td align="left"><{$item.i_score_ad/100}></td>
+                <td align="left"><{$item.ctime}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$channelIPages}></div>
+    </div>
+</div>
+</body>
+</html>

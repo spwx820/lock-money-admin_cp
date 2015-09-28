@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("优惠券");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+
+</head>
+<body>
+<{$page_header}>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">序号</th>
+                <th align="left">名称</th>
+                <th align="left">系统类型</th>
+                <th align="left">是否有密码</th>
+                <th align="left">券码数量</th>
+                <th align="left">有效券码数量</th>
+                <th align="left">创建时间</th>
+                <th align="left">状态</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <{if $coupon_list_page}>
+            <{foreach from=$coupon_list_page item=item key=key}>
+            <tr>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.name}></td>
+                <td align="left"><{$item.os_type}></td>
+                <td align="left"><{$item.is_password}></td>
+                <td align="left"><{$item.code_amt}></td>
+                <td align="left"><{$item.coupon_num}></td>
+                <td align="left"><{$item.atime}></td>
+                <td align="left"><{if $item.status == 0}>待发送<{elseif $item.status == 1}>处理成功<{/if}></td>
+                <td align="left">
+
+                <a href="/admin/coupon/coupon_code_add?id=<{$item.id}>&page=<{$page}>&list_type=<{$list_type}>">[添加券码]</a>&nbsp;|&nbsp;
+                <{if $list_type == 1 || $list_type == 2}>
+                    <{if $item.status == 0 }>
+                        <a href="/admin/coupon/audit?id=<{$item.id}>&list_type=<{$list_type}>&page=<{$page}>" >[发送]</a>&nbsp;|&nbsp;
+                    <{/if}>
+                    <{if $item.status == 1 }>
+                     <a href="/admin/coupon/pause?id=<{$item.id}>&list_type=<{$list_type}>&page=<{$page}>">[暂停]</a>&nbsp;|&nbsp;
+                    <{/if}>
+                <{/if}>
+
+                <{if $list_type == 3}>
+                    <{if $item.status >= 0 }>
+                        <a href="/admin/coupon/add_user_id?id=<{$item.id}>&page=<{$page}>">[添加用户uid]</a>&nbsp;|&nbsp;
+                        <{if $item.num_ready > 0 }>
+                            <a href="/admin/coupon/send_user_coupon?id=<{$item.id}>&page=<{$page}>">[发送]</a>&nbsp;|&nbsp;
+                        <{/if}>
+
+                    <{/if}>
+                <{/if}>
+
+                <a href="/admin/coupon/detail?id=<{$item.id}>&list_type=<{$list_type}>&page=<{$page}>">[详情]</a>
+
+                    &nbsp;|&nbsp;<a href="/admin/coupon/delete?id=<{$item.id}>&list_type=<{$list_type}>&page=<{$page}>" onclick="return confirm('您确定要删除吗？')">[删除]</a>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+
+        </table>
+        <div id="pages">
+            <{$coupon_pages}>
+        </div>
+    </div>
+</div>
+</body>
+</html>

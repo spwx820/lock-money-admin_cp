@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("通知管理");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+
+        function sures(){
+            if(confirm('请确定后操作？')){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">通知管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/notification/" method="post" name="form_member_search">
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $pkOs}>
+                    <{foreach from=$pkOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_status">
+                    <option value='' >请选择状态</option>
+                    <{if $notificationStatus}>
+                    <{foreach from=$notificationStatus item=item key=key}>
+                    <{if is_numeric($actionStatus) && $actionStatus == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_type">
+                    <option value='' >请选择类别</option>
+                    <{if $notificationType}>
+                    <{foreach from=$notificationType item=item key=key}>
+                    <{if $actionType == $item.action}>
+                    <option value='<{$item.action}>' selected><{$item.name}></option>
+                    <{else}>
+                    <option value='<{$item.action}>' ><{$item.name}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/notification/" class="on">
+            <em>通知管理</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_ios" >
+            <em>iOS通知添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_android" >
+            <em>Android通知添加</em>
+        </a>
+        <span>|</span>
+        <em class="red">(提示：类别应用详情页状态为有效时,通知才会做发送操作)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">通知ID</th>
+                <th align="left">通知标题</th>
+                <th align="left">系统</th>
+                <th align="left">类型</th>
+                <th align="left">类别</th>
+                <th align="left">状态</th>
+                <th align="left">限制数量</th>
+                <th align="left">到达/失败数</th>
+                <th align="left">积分墙状态</th>
+                <th align="left" width="70">上线时间</th>
+                <th align="left" width="70">下线时间</th>
+                <th align="left">创建人</th>
+                <th align="left">创建时间</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $notificationList}>
+            <{foreach from=$notificationList item=item key=key}>
+            <tr>
+                <td align="left"><{$item.id}></td>
+                <td align="left" title="<{$item.subtitle}>" width="140"><{$item.title}></td>
+                <td align="left"><{$pkOs[$item.os_type]}></td>
+                <td align="left"><{$publicType[$item.n_type]}></td>
+                <td align="left"><{$notificationType[$item.action]['name']}></td>
+                <td align="left">
+                    <{if in_array($item.action,array('integral_detail')) && 1 == $item.status && 1 == $item.ad_status}>
+                    <span class="green"><{$notificationStatus[$item.status]}></span>
+                    <{else}>
+                    <{$notificationStatus[$item.status]}>
+                    <{/if}>
+                </td>
+                <td align="left">
+                    <{if $item.limit_num>0}>
+                    <{$item.limit_num}>
+                    <{/if}>
+                </td>
+                <td align="left"><{$item.send_num}></td>
+                <td align="left">
+                    <{if in_array($item.action,array('integral_detail'))}>
+                    <{$adStatus[$item.ad_status]}>
+                    <{/if}>
+                </td>
+                <td align="left" width="70"><{$item.start_date}></td>
+                <td align="left" width="70"><{$item.end_date}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left">
+                    <table class="rt">
+                    <{if in_array($adminId,array(1,2,3,4,5,30))}>
+                        <{if 0 == $item.status}>
+                        <form action="/admin/notification/audit" method="post" onsubmit="return sures()">
+                            <input type="hidden"  name="nid" value="<{$item.id}>" />
+                            <input type="hidden"  name="page" value="<{$page}>"/>
+                            <input type="submit" class="button" name="dosubmit" value="审核" />
+                        </form>
+                        &nbsp;|&nbsp;
+                        <{elseif 1 == $item.status}>
+                        <form action="/admin/notification/submit" method="post" onsubmit="return sures()">
+                        <input type="hidden"  name="nid" value="<{$item.id}>" />
+                        <input type="hidden"  name="page" value="<{$page}>"/>
+                        <input type="submit" class="button" name="dosubmit" value="提交" />
+                    </form>
+                        &nbsp;|&nbsp;
+                        <{/if}>
+                        <{if $item.status <=1}>
+                        <form action="/admin/notification/del" method="post" onsubmit="return sures()">
+                            <input type="hidden"  name="nid" value="<{$item.id}>" />
+                            <input type="hidden"  name="page" value="<{$page}>"/>
+                            <input type="submit" class="button" name="dosubmit" value="删除" />
+                        </form>
+                        &nbsp;|&nbsp;
+                        <{/if}>
+                    <{/if}>
+                    <a href="/admin/notification/detail?nid=<{$item.id}>&page=<{$page}>">[详细]</a>
+                    </table>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$notificationListPages}></div>
+    </div>
+</div>
+</body>
+</html>

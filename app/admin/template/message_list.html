@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("消息管理");})
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">消息管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/message/" method="post" name="form_member_search">
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $messageOs}>
+                    <{foreach from=$messageOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_status">
+                    <option value='' >请选择状态</option>
+                    <{if $messageStatus}>
+                    <{foreach from=$messageStatus item=item key=key}>
+                    <{if is_numeric($actionStatus) && $actionStatus == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/message/" class="on"><em>消息记录</em></a>
+        <span>|</span>
+        <a href="/admin/message/add"><em>消息添加</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/message/del" method="post" name="form_message_manage">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left" width="40"><input type="checkbox" value="" id="check_box" onclick="selectall('mid[]');"></th>
+                <th align="center">ID</th>
+                <th align="left">标题</th>
+                <th align="left">是否通知</th>
+                <th align="left">类型</th>
+                <th align="left">系统</th>
+                <th align="left">上线时间</th>
+                <th align="left">下线时间</th>
+                <th align="left">发送尾号</th>
+                <th align="left">状态</th>
+                <th align="left">到达/失败数</th>
+                <th align="left">操作人</th>
+                <th align="left">创建时间</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $messageList}>
+            <{foreach from=$messageList item=item key=key}>
+            <tr>
+                <td><input name="mid[]" id="mid[]" type="checkbox" value="<{$item.id}>"></td>
+                <td align="center"><{$item.id}></td>
+                <td align="left" title="<{$item.info_title}>"><{cn_substr($item.info_title,10)}></td>
+                <td align="left"><{$messageNotify[$item.info_notify]}></td>
+                <td align="left"><{$messageType[$item.message_type]}></td>
+                <td align="left"><{$messageOs[$item.os_type]}></td>
+                <td align="left"><{$item.start_date}></td>
+                <td align="left"><{$item.end_time}></td>
+                <td align="left"><{$item.rate}></td>
+
+                <td align="left"><{$messageStatus[$item.status]}></td>
+                <td align="left"><{$item.send_num}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left">
+                    <{if 0 == $item.status && in_array($adminId,array(1,2,3,4,5))}>
+                        <a href="/admin/message/audit?mid=<{$item.id}>&page=<{$page}>">[审核]</a>
+                        &nbsp;|&nbsp;
+                    <{elseif 1 == $item.status && in_array($adminId,array(1,2,3,4,5))}>
+                        <a href="/admin/message/submit?mid=<{$item.id}>&page=<{$page}>">[提交]</a>
+                        &nbsp;|&nbsp;
+                    <{/if}>
+                    <{if 0 == $item.status}>
+                        <a href="/admin/message/edit?mid=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    <a href="/admin/message/detail?mid=<{$item.id}>&page=<{$page}>">[详细]</a>
+
+                    <{elseif 1 == $item.status && in_array($adminId,array(1,2,3,4,5))}>
+                        <a href="/admin/message/edit?mid=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    <a href="/admin/message/detail?mid=<{$item.id}>&page=<{$page}>">[详细]</a>
+
+                    <{else}>
+                        <a href="/admin/message/detail?mid=<{$item.id}>&page=<{$page}>">[详细]</a>
+                    <{/if}>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <{if in_array($adminId,array(1,2,3,4,5))}>
+        <div class="btn">
+            <label for="check_box">全选/取消</label>
+            <input type="submit" class="button" value="删除" onclick="return confirm('您确定要删除吗？')"/>
+        </div>
+        <{/if}>
+        <div id="pages"><{$messagePages}></div>
+    </div>
+    </form>
+</div>
+</body>
+</html>

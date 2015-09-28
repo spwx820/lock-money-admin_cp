@@ -1,0 +1,74 @@
+<div id="leftMain">
+    <a href="/"><h3 class="f14">管理中心</h3></a>
+    <{if $userRights.1}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/audit/"  target="right_iframe">待审核</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.2}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/user/"  target="right_iframe">用户管理</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.12}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/package/"  target="right_iframe">打包管理</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.3}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/exchange/"  target="right_iframe">兑换记录</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.4}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/channel/"  target="right_iframe">渠道统计</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.9}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/invite/"  target="right_iframe">邀请统计</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.5}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/adoperate/"  target="right_iframe">锁屏广告运营</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.6}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/hongbao/"  target="right_iframe">群发红包</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.7}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/smspasswd/"  target="right_iframe">短信发送密码</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.14}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/device_modify/"  target="right_iframe">设备修改</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.10}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/channel_set/"  target="right_iframe">渠道统计配置</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.11}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/message/"  target="right_iframe">发送消息</a></li>
+    </ul>
+    <{/if}>
+    <{if $userRights.13}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/feedback/" target="right_iframe">反馈管理</a></li>
+    </ul>
+    <{/if}>
+    <div class="line-x"></div>
+    <{if $userRights.8}>
+    <ul>
+        <li class="menuli" onclick="menu_show(this);"><a hidefocus="true" style="outline:none" href="/admin/manage/" target="right_iframe">管理员管理</a></li>
+    </ul>
+    <{/if}>
+</div>

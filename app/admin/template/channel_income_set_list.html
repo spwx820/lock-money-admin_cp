@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道收益统计");
+        })
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">
+        渠道收益统计
+    </h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form name="form_search" method="post" action="/admin/channel_income/">
+                注册日期：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="rdate" id="rdate" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("rdate").value="<{$rdate}>";
+                    Calendar.setup({
+                        inputField     :    "rdate",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                渠道号：
+                <input class="input-text" type="text" value="<{$channel}>" name="channel">
+                <input class="button" type="submit" value="搜索" name="search">
+            </form>
+        </div>
+        <a href="/admin/channel_income/" class="on">
+            <em>渠道收益统计</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel_income/add" >
+            <em>渠道收益配置添加</em>
+        </a>
+        <span>|</span>
+        <em class="red">(小提示：只统计前200配置)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/channel_income/del" method="post" name="form_channel_income">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left" width="40"><input type="checkbox" value="" id="check_box" onclick="selectall('cid[]');"></th>
+                <th align="left">序号</th>
+                <th align="left">渠道号</th>
+                <th align="left">注册日期</th>
+                <th align="left">注册人数</th>
+                <th align="left">操作人</th>
+                <th align="left">操作时间</th>
+                <th align="left">查看</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $channelISetList}>
+            <{foreach from=$channelISetList item=item key=key}>
+            <tr>
+                <td><input name="cid[]" id="cid[]" type="checkbox" value="<{$item.id}>"></td>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.rdate}></td>
+                <td align="left"><{$item.rnum}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left">
+                    <a href="/admin/channel_income/detail?id=<{$item.id}>">[统计]</a>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div class="btn">
+            <label for="check_box">全选/取消</label>
+            <input type="submit" class="button" value="删除" onclick="return confirm('您确定要删除吗？')"/>
+        </div>
+        <div id="pages"><{$channelISetPages}></div>
+    </div>
+    </form>
+</div>
+</body>
+</html>

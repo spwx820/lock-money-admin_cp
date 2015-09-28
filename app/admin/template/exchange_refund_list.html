@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("兑换记录");
+        })
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">兑换记录</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/exchange/refund_list" method="post" name="form_member_search">
+                兑换时间：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/exchange/">
+            <em>兑换记录</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/exchange/refund_list" class="on">
+            <em>退款记录</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+        <div class="table-list">
+            <table width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th align="left">兑换ID</th>
+                    <th align="left">物品ID</th>
+                    <th align="left">用户ID</th>
+                    <th align="left" width="150">设备号</th>
+                    <th align="left">充值信息</th>
+                    <th align="left">充值通道</th>
+                    <th align="left">实际支付金额</th>
+                    <th align="left">备注</th>
+                    <th align="left">操作人</th>
+                    <th align="left">更新时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <{foreach from=$exchangeList item=item key=key}>
+                <tr>
+                    <td align="left"><{$item.id}></td>
+                    <td align="left"><{$item.present_id}></td>
+                    <td align="left"><{$item.uid}></td>
+                    <td align="left" width="150"><{$item.device_id}></td>
+                    <td align="left"><{$item.pay_content}></td>
+                    <td align="left"><{$item.paychannel}></td>
+                    <td align="left"><{$item.pay}></td>
+                    <td align="left"><{$item.remark}></td>
+                    <td align="left"><{$item.admin}></td>
+                    <td align="left"><{$item.update_time}></td>
+                </tr>
+                <{/foreach}>
+                <tr>
+                    <th align="left">小计: (分)</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    <th align="left"><{$sum_cur}> (分)</th>
+                </tr>
+                <tr>
+                    <th align="left">总计: (分)</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    <th align="left"><{$sum_all}> (分)</th>
+                </tr>
+                </tbody>
+            </table>
+
+            <div id="pages"><{$exchangePages}></div>
+
+            <!--<div style="position: absolute;left: 20px;">-->
+                <!--按时间查看退款总额：-->
+                <!--<input type="text" name="start_time" id="sum_start_time" value="" size="10" class="date" readonly>&nbsp;-->
+                <!--<script language="javascript" type="text/javascript">-->
+                    <!--date = new Date();document.getElementById ("sum_start_time").value="";-->
+                    <!--Calendar.setup({-->
+                        <!--inputField     :    "sum_start_time",-->
+                        <!--ifFormat       :    "%Y-%m-%d",-->
+                        <!--showsTime      :    false,-->
+                        <!--timeFormat     :    "24"-->
+                    <!--});-->
+                <!--</script>-->
+                <!--<input type="text" name="end_time" id="sum_end_time" value="" size="10" class="date" readonly>&nbsp;-->
+                <!--<script language="javascript" type="text/javascript">-->
+                    <!--date = new Date();document.getElementById ("sum_end_time").value="";-->
+                    <!--Calendar.setup({-->
+                        <!--inputField     :    "sum_end_time",-->
+                        <!--ifFormat       :    "%Y-%m-%d",-->
+                        <!--showsTime      :    false,-->
+                        <!--timeFormat     :    "24"-->
+                    <!--});-->
+                <!--</script>-->
+                <!--<span> </span>-->
+                <!--<input type="button" id="get_sum_value" value="汇总金额" onclick="do_sum(this)"/>-->
+                <!--<input type = 'text' id="sum_value" value="" readonly style="border: 0; margin-left: 20px;width: 250px"/>-->
+            <!--</div>-->
+
+        </div>
+</div>
+
+<!--<script type="application/javascript">-->
+
+    <!--function do_sum(obj)-->
+    <!--{-->
+        <!--var start = document.getElementById('sum_start_time').value-->
+        <!--var end = document.getElementById('sum_end_time').value-->
+
+        <!--$.ajax({-->
+            <!--url: "/admin/exchange/sum?start_time=" + start +  "&end_time=" + end,-->
+            <!--success: function (data) {-->
+                <!--document.getElementById('sum_value').value = data-->
+
+                <!--if(data.indexOf('成功') != -1) {-->
+                    <!--document.getElementById('sum_value').value = data-->
+                <!--}-->
+            <!--}-->
+        <!--})-->
+
+    <!--}-->
+    <!--do_sum()-->
+
+<!--</script>-->
+
+</body>
+</html>

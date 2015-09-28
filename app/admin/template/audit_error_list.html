@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("审核错误");
+        })
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">
+        审核错误
+    </h2>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">兑换ID</th>
+                <th align="left">物品ID</th>
+                <th align="left">用户ID</th>
+                <th align="left">设备号</th>
+                <th align="left">实际支付金额</th>
+                <th align="left">充值信息</th>
+                <th align="left">兑换类型</th>
+                <th align="left">兑换状态</th>
+                <th align="left">是否暂缓</th>
+                <th align="left">兑换时间</th>
+                <th align="left">兑换IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $auditList}>
+            <{foreach from=$auditList item=item key=key}>
+            <{if $item.ish == 1}>
+            <tr style="background: none repeat scroll 0 0 #FFDEB1;">
+                <{else}>
+            <tr>
+                <{/if}>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.present_id}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.device_id}></td>
+                <td align="left"><{$item.pay}></td>
+                <td align="left"><{$item.pay_content}></td>
+                <td align="left"><{$payType[$item.ptype]}></td>
+                <td align="left"><{$payStatus[$item.pay_status]}></td>
+                <td align="left"><{if $item.ish == 1}>是<{else}>否<{/if}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left"><{$item.ip}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$auditPages}></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>统计中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("添加支出");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    function sures()
+    {
+        if(confirm('请确定提交内容后继续？')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+</script>
+
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">支出统计</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/expense/" ><em>支出记录</em></a>
+        <span>|</span>
+        <a href="/admin/expense/add" class="on"><em>支出添加</em></a>
+        <span>|</span>
+        <a href="/admin/expense/upload" ><em>支出上传</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+
+
+<div class="pad-lr-10">
+    <form name="request_expense" action="/admin/expense/add" enctype="multipart/form-data" autocomplete="off" method="post" id="myform" onsubmit="return sures()">
+        <table class="table_form">
+            <tr >
+                <th >合作单位：</th>
+                <td >
+                    <input name="company" id="company"/>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th >渠道号：</th>
+                <td >
+                    <input name="channel" id="channel"/>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <link href="/js/calendars/jscal2.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/border-radius.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/win2k.css" type="text/css" rel="stylesheet">
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/lang/en.js" type="text/javascript"></script>
+            <tr>
+                <th>结算开始时间：</th>
+                <td>
+                    <input type="text" name="start_time" id="start_time" class="date input-text" type="text" readonly="" size="18">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "start_time",
+                            trigger : "start_time",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="120" >结算结束时间：</th>
+                <td>
+                    <input type="text" name="end_time" id="end_time" class="date input-text" type="text" readonly="" size="18">
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "end_time",
+                            trigger : "end_time",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th>推广量：</th>
+                <td>
+                    <input  name="num_promo" id="num_promo"/>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th>单价：</th>
+                <td>
+                    <input  name="price" id="price" />
+                    <span class="red">*(/元)</span>
+                </td>
+            </tr>
+            <tr>
+                <th>支出费用：</th>
+                <td>
+                    <input  name="expense" id="expense"/>
+                    <span class="red">*(/元)</span>
+                </td>
+            </tr>
+            <tr>
+                <th>负责人：</th>
+                <td>
+                    <input name="person" id="person" />
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th>备注：</th>
+                <td>
+                    <textarea name="remark" id="remark" style="height:160px; width:450px" > </textarea>
+                    <span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" /></th>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>
+

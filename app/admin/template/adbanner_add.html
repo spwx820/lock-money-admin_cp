@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("广告banner添加");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+        $("#banner_name").formValidator({onshow:"请输入名称",onfocus:"名称限制在10-50个字符"}).inputValidator({min:10,max:50,onerror:"名称限制在10-50个字符"});
+        $("#click_url").formValidator({onshow:"请输入链接",onfocus:"请正确输入链接"}).regexValidator({regexp:"url",datatype:"enum",onerror:"链接格式错误"});
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">广告banner</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/adbanner/" >
+            <em>广告banner</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/adbanner/add" class="on">
+            <em>广告banner添加</em>
+        </a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/adbanner/add" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="100">banner名称：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="banner_name" id="banner_name" /></td>
+            </tr>
+            <tr>
+                <th width="100">操作系统：</th>
+                <td class="y-bg">
+                    <select name="os_type">
+                        <option value='' >请选择系统</option>
+                        <{if $publicOs}>
+                        <{foreach from= $publicOs item=item key=key}>
+                        <option value='<{$key}>' ><{$item}></option>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>&nbsp;<span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">跳转链接：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="click_url" id="click_url" />
+                </td>
+            </tr>
+            <tr>
+                <th>渠道号类型：</th>
+                <td class="y-bg">
+                    <input type="radio" name="channel_type" checked="" value="0"> 只发送到下列渠道
+                    <input type="radio" name="channel_type" value="1"> 排除下列渠道
+                </td>
+            </tr>
+            <tr>
+                <th>打开方式：</th>
+                <td class="y-bg">
+                    <input type="radio" name="open_type" checked="" value="0"> 客户端
+                    <input type="radio" name="open_type" value="1"> 浏览器
+                </td>
+            </tr>
+            <tr>
+                <th width="100">渠道号：</th>
+                <td class="y-bg">
+                    <textarea style="height:120px; width:30%" name="channel" id="channel"></textarea>&nbsp;
+                    <span class="red">(小提示：渠道号请使用"|"分隔,例如:share|360|baidu)</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">上传文件：</th>
+                <td class="y-bg">
+                    <input type="file" name="file_uplode" id="file_uplode"/>
+                </td>
+            </tr>
+            <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+            <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+            <tr>
+                <th width="100">上架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="start_date" id="start_date" value="" size="10" class="date" readonly>
+                    <span class="red">*</span>
+                    <script language="javascript" type="text/javascript">
+                        date = new Date();document.getElementById ("start_date").value="";
+                        Calendar.setup({
+                            inputField     :    "start_date",
+                            ifFormat       :    "%Y-%m-%d",
+                            showsTime      :    false,
+                            timeFormat     :    "24"
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">下架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="end_date" id="end_date" value="" size="10" class="date" readonly>
+                    <span class="red">*</span>
+                    <script language="javascript" type="text/javascript">
+                        date = new Date();document.getElementById ("end_date").value="";
+                        Calendar.setup({
+                            inputField     :    "end_date",
+                            ifFormat       :    "%Y-%m-%d",
+                            showsTime      :    false,
+                            timeFormat     :    "24"
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">banner说明：</th>
+                <td class="y-bg">
+                    <textarea style="height:120px; width:30%" name="memo" id="memo"></textarea>&nbsp;
+                    <span class="red">*</span>
+                </td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

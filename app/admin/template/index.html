@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap - Data Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/css/vendor/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="/css/vendor/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="/css/jquery.bdt.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/hongbao/" class="on"><em>群发红包记录</em></a>
+        <span>|</span>
+        <a href="/admin/hongbao/add"><em>群发红包</em></a>
+        <{if in_array($adminId,array(1))}>
+        <span>|</span>
+        <a href="/admin/hongbao/test"><em>test</em></a>
+        <{/if}>
+
+    </div>
+</div>
+
+<div class="col-md-12">
+    <form class="form-inline">
+        <div class="input-group date start_time " data-date="" data-date-format="yyyy mm dd - HH:ii p" data-link-field="start_time">
+            <input class="form-control" size="16" type="text" value=""/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+            <input type="hidden" id="start_time" name="start_time" value=""/>
+        </div>
+        <div class="input-group date end_time " data-date="" data-date-format="yyyy mm dd - HH:ii p" data-link-field="end_time">
+            <input class="form-control" size="16" type="text" value=""/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+            <input type="hidden" id="end_time" name="end_time" value=""/>
+        </div>
+        <input class="form-control" size="16" type="text" value="" id="search"/>
+
+    </form>
+
+    <table class="table table-hover" id="bootstrap-table">
+        <thead class="table_header">
+        <tr>
+            <th>#ID</th>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>200</td>
+            <td>janedoe</td>
+            <td>Yane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>zanedoe</td>
+            <td>Jane</td>
+            <td>Moe</td>
+        </tr>
+        <tr>
+            <td>300</td>
+            <td>aanedoe</td>
+            <td>Lane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>canedoe</td>
+            <td>Jane</td>
+            <td>Boe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>janedoe</td>
+            <td>Jane</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>210</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>310</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>410</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>510</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>610</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>710</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>810</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>910</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>110</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>120</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>130</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>140</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>150</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>160</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>170</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>180</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        <tr>
+            <td>190</td>
+            <td>johndoe</td>
+            <td>John</td>
+            <td>Doe</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script src="/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="/js/vendor/jquery.sortelements.js" type="text/javascript"></script>
+<script src="/js/jquery.bdt.js" type="text/javascript"></script>
+<script>
+    $(document).ready( function () {
+        $('#bootstrap-table').bdt({pageRowCount: 60});
+    });
+</script>
+</body>
+</html>

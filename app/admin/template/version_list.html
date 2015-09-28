@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("版本管理");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">版本管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/version/" method="post" name="form_member_search">
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $packageOs}>
+                    <{foreach from=$packageOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$item}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$item}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/version/" class="on"><em>版本管理</em></a>
+        <span>|</span>
+        <a href="/admin/version/add"><em>添加版本</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left" width="60">版本号</th>
+                <th align="left">系统</th>
+                <th align="left">下载地址</th>
+                <th align="left" width="40">投放尾号</th>
+                <th align="left" width="40">状态</th>
+                <th align="left" width="60">版本废弃</th>
+                <th align="left" width="60">推荐更新</th>
+                <th align="left">创建时间</th>
+                <th align="left" width="150">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $versionList}>
+            <{foreach from=$versionList item=item key=key}>
+            <tr>
+                <td align="left" title="<{$item.what_news}>"><{$item.version}></td>
+                <td align="left"><{$item.os_type}></td>
+                <td align="left"><{$item.dl_url}></td>
+                <td align="left"><{if $item.rate >= '0'}><{$item.rate}><{/if}></td>
+                <td align="left"><{$versionStatus[$item.status]}></td>
+                <td align="left"><{$publicRadio_force[$item.update_is_force]}></td>
+                <td align="left"><{$publicRadio[$item.update_is_recommend]}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left">
+                    <{if $item.status == 0 && in_array($adminId,array(1,2,3,4,5))}>
+                    <a href="/admin/version/audit?id=<{$item.id}>&page=<{$page}>">[审核]</a>
+                    &nbsp;|&nbsp;
+                    <{/if}>
+                    <a href="/admin/version/edit?id=<{$item.id}>&page=<{$page}>&rate=<{$item.rate}>">[编辑]</a>
+                    <{if $item.status != 0}>
+                    &nbsp;|&nbsp;
+                    <a href="/admin/version/stop?id=<{$item.id}>&page=<{$page}>">[停止更新]</a>
+                    <{/if}>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$versionPages}></div>
+    </div>
+</div>
+</body>
+</html>

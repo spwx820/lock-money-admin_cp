@@ -1,0 +1,40 @@
+/**
+* Custom styles for BDT - Bootstrap Data Tables
+**/
+
+.bdt thead th {
+    cursor: pointer;
+}
+
+.bdt .sort-icon {
+    width: 10px;
+    display: inline-block;
+    padding-left: 5px;
+}
+.table_header {
+    height:30px;
+    background:#eef3f7;
+    border-bottom:1px solid #d5dfe8;
+    font-weight:400;
+}
+
+#table-footer {
+    margin-bottom: 15px;
+}
+
+#table-footer a, #table-footer button {
+    outline: none;
+}
+
+#table-footer .form-horizontal .control-label {
+    text-align: left;
+    margin: 0 15px;
+}
+
+#table-footer .pagination {
+    margin: 0 15px;
+}
+
+#table-footer .pagination li:not(.active) {
+    cursor: pointer;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("设备修改");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform"});
+        $("#pnum").formValidator({onshow:"请输入手机号",onfocus:"手机号格式错误",oncorrect:"正确"}).regexValidator({regexp:"mobile",datatype:"enum",onerror:"手机号格式错误"}).ajaxValidator({
+            type : "get",
+            url : "/admin/device_modify/ajaxuser",
+            data :"",
+            datatype : "html",
+            async:'false',
+            success : function(data){
+                if( data == "1" ){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            buttons: $("#dosubmit"),
+            onerror : "该手机号为空或不存在。",
+            onwait : "请稍候..."
+        });
+        $("#device_id").formValidator({onshow:"请输入设备ID",onfocus:"设备ID不能为空",oncorrect:"正确"}).inputValidator({regexp:"notempty",datatype:"enum",onerror:"设备ID不能为空"});
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">设备修改</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/device_modify/add" class="on"><em>设备修改</em></a>
+        <span>|</span>
+        <a href="/admin/device_modify/" ><em>设备修改记录</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form name="request_message" action="/admin/device_modify/add" method="post" id="myform" >
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="80">手机号码：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="pnum"  id="pnum" /></td>
+            </tr>
+            <tr>
+                <th width="80">设备ID：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="device_id"  id="device_id" /></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg"><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" /></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+</body>
+</html>

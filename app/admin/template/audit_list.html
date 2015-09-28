@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("待审核");
+        })
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+<div class="subnav">
+    <h2 class="title-1 line-x f12 fb blue lh28">
+        待审核 <span>|</span>
+        待条数：<{$auditCount}> 待金额：<{$auditSum}><span>|</span>
+        已审核数：<{$auditFinishCount}> 已审核金额：<{$auditFinishSum}><span>|</span>
+        <a href="/admin/audit/error" target="_self">
+        错误审核数：<{$auditErrorCount}>  错误审核金额：<{$auditErrorSum}>
+        </a><span>|</span>
+        今日付款数：<{$auditToDayCount}>  今日付款金额：<{$auditToDaySum}>
+    </h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/audit/" method="post" name="form_member_search">
+                <select name="action_pay_type">
+                    <option value='' >请选择兑换类型</option>
+                    <{if $payType}>
+                        <{foreach from=$payType item=item key=key}>
+                            <{if is_numeric($actionPayType) && $actionPayType == $key}>
+                            <option value='<{$key}>' selected><{$item}></option>
+                            <{else}>
+                            <option value='<{$key}>' ><{$item}></option>
+                            <{/if}>
+                        <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_type">
+                    <{if 3 == $actionType}>
+                    <option value='1'>用户ID</option>
+                    <option value='2'>兑换ID</option>
+                    <option value='3' selected>手机号</option>
+                    <{elseif 2 == $actionType}>
+                    <option value='1'>用户ID</option>
+                    <option value='2' selected>兑换ID</option>
+                    <option value='3'>手机号</option>
+                    <{else}>
+                    <option value='1' selected>用户ID</option>
+                    <option value='2'>兑换ID</option>
+                    <option value='3'>手机号</option>
+                    <{/if}>
+                </select>
+                <input name="keyword" type="text" value="<{$keyword}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/audit/" class="on">
+            <em>待审核</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">兑换ID</th>
+                <th align="left">物品ID</th>
+                <th align="left">用户ID</th>
+                <th align="left">设备号</th>
+                <th align="left">实际支付金额</th>
+                <th align="left">兑换类型</th>
+                <th align="left">兑换状态</th>
+                <th align="left">是否暂缓</th>
+                <th align="left">兑换时间</th>
+                <th align="left">兑换IP</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $auditList}>
+            <{foreach from=$auditList item=item key=key}>
+            <{if $item.ish == 1}>
+            <tr style="background: none repeat scroll 0 0 #FFDEB1;">
+            <{else}>
+            <tr>
+            <{/if}>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.present_id}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.device_id}></td>
+                <td align="left"><{$item.pay}></td>
+                <td align="left"><{$payType[$item.ptype]}></td>
+                <td align="left"><{$payStatus[$item.pay_status]}></td>
+                <td align="left"><{if $item.ish == 1}>是<{else}>否<{/if}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left"><{$item.ip}></td>
+                <td align="left"><a href="/admin/audit/audit?pay_id=<{$item.id}>&listpage=<{$page}>&pay_type=<{$actionPayType}>" title="<{$item.remark}>">[审核]</a></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$auditPages}></div>
+    </div>
+</div>
+</body>
+</html>

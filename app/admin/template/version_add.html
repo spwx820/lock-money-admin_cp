@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("添加版本");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">版本管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/version/"><em>版本管理</em></a>
+        <span>|</span>
+        <a href="/admin/version/add" class="on"><em>添加版本</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/version/add" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="80">版本号：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="version"  id="version" />
+                    &nbsp;<span class="red">*</span>ios填写3位版本号, 如 1.5.0,  安卓填写4位版本号, 如 1.5.0.0
+                </td>
+            </tr>
+            <tr>
+                <th width="80">投放尾号：</th>
+                <td class="y-bg">
+                    <label><input name="rate[]" type="checkbox" value="0" />0 </label>
+                    <label><input name="rate[]" type="checkbox" value="1" />1 </label>
+                    <label><input name="rate[]" type="checkbox" value="2" />2 </label>
+                    <label><input name="rate[]" type="checkbox" value="3" />3 </label>
+                    <label><input name="rate[]" type="checkbox" value="4" />4 </label>
+                    <label><input name="rate[]" type="checkbox" value="5" />5 </label>
+                    <label><input name="rate[]" type="checkbox" value="6" />6 </label>
+                    <label><input name="rate[]" type="checkbox" value="7" />7 </label>
+                    <label><input name="rate[]" type="checkbox" value="8" />8 </label>
+                    <label><input name="rate[]" type="checkbox" value="9" />9 </label>
+                    <span>|</span>
+                    <label><input name="rate_all" type="checkbox" id="rate_all" value="10" onclick="is_rate_all(this)"/>全选 </label>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">操作系统：</th>
+                <td class="y-bg">
+                    <select name="os_type" id="os_type" onclick="is_ios(this)">
+                        <option value='os_type' >请选择系统</option>
+                        <{if $packageOs}>
+                        <{foreach from= $packageOs item=item key=key}>
+                        <option value='<{$item}>'><{$item}></option>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>&nbsp;<span class="red">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th width="80">下载地址：</th>
+                <td class="y-bg">
+                    <input type="text" style="width:30%" class="input-text" name="dl_url"  id="dl_url" />
+                    &nbsp;<span class="red">*</span><span id="hint"></span>
+                </td>
+            </tr>
+            <tr>
+                <th width="80">升级说明：</th>
+                <td class="y-bg">
+                    <textarea id="what_news" name="what_news" style="height:160px; width:30%"></textarea>
+                    &nbsp;<span class="red">*</span>
+                </td>
+            </tr>
+            <tr style="display:none">
+                <th width="100">版本废弃：</th>
+                <td class="y-bg">
+                    <input type="radio" name="is_force" value="1">是
+                    <input type="radio" name="is_force" checked="" value="0">否
+                </td>
+            </tr>
+            <tr>
+                <th width="100">推荐更新：</th>
+                <td class="y-bg">
+                    <input type="radio" name="is_recommend" checked="" value="1">是
+                    <input type="radio" name="is_recommend" value="0">否
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg"><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" /></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+
+<script type="application/javascript">
+function is_rate_all(evt) {
+    key = document.getElementById("rate_all");
+    objName = document.getElementsByName("rate[]");
+    if (key.checked) {
+        for (var i = 0; i < objName.length; i++) {
+            objName[i].checked = true;
+        }
+    }
+    else {
+        for (var i = 0; i < objName.length; i++) {
+            objName[i].checked = false;
+        }
+    }
+}
+
+
+function is_ios(evt) {
+    key = document.getElementById("os_type");
+    if (key.value == 'ios') {
+        document.getElementById("dl_url").value = 'itms-services://?action=download-manifest&url='
+        document.getElementById("hint").innerHTML = "&nbsp;将plist文件链接填在url=之后, 如 https://www.hongbaosuoping.com/plist/share1540.plist"
+    }
+    else {
+        document.getElementById("dl_url").value = ''
+        document.getElementById("hint").innerHTML = "填写apk安装包下载链接, 如 http://cc-cdn.dianjoy.com/hongbao/hongbaosuoping-v1.7.2.0-share.apk"
+    }
+}
+</script>
+
+
+</body>
+</html>

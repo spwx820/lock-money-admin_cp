@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("密码发送");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)"><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">密码发送</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/smspasswd/add"><em>密码发送</em></a>
+        <span>|</span>
+        <a href="/admin/smspasswd/" class="on"><em>密码发送记录</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="left">手机号码</th>
+                <th align="left">密码</th>
+                <th align="left">状态</th>
+                <th align="left">操作人</th>
+                <th align="left">创建时间</th>
+                <th align="left">IP</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $passwdList}>
+            <{foreach from=$passwdList item=item key=key}>
+            <tr>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.mobile}></td>
+                <td align="left"><{$item.password}></td>
+                <td align="left" title="<{$item.wrong_msg}>"><{$smspwStatus[$item.status]}></td>
+                <td align="left"><{$item.creater}></td>
+                <td align="left"><{$item.createtime}></td>
+                <td align="left"><{$item.client_ip}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$passwdPages}></div>
+    </div>
+</div>
+</body>
+</html>

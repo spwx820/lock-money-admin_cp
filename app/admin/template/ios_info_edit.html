@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("编辑版本");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">IOS线上信息</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/version/ios_info/" class="on"><em>IOS线上信息</em></a>
+        <span>|</span><a href="/admin/version/ios_info_zaibei/"><em>IOS灾备信息</em></a>
+
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/version/ios_info" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="160">IOS 包名：</th>
+                <td colspan="3">
+                    <input type="text" style="width:30%" class="input-text" name="bundle_identifier" id="bundle_identifier" value="<{$bundle_identifier}>"/>
+                    &nbsp;<span class="red">*</span><span id="hint"></span>
+                </td>
+            </tr>
+            <tr>
+                <th width="160">IOS 版本号：</th>
+                <td >
+                    <input type="text" style="width:30%" class="input-text" name="ios_version" id="ios_version" value="<{$ios_version}>"/>
+                    &nbsp;<span class="red">*</span><span id="hint1"></span>
+                </td>
+            </tr>
+            <tr>
+                <th width="160">更新时间：</th>
+                <td >
+
+                    <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                    <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                    <input type="text" style="width:30%" class="input-text" name="update_time" id="update_time" value="<{$update_time}>"/>
+                    <script language="javascript" type="text/javascript">
+                        date = new Date();document.getElementById ("update_time").value="<{$update_time}>";
+                        Calendar.setup({
+                            inputField     :    "update_time",
+                            ifFormat       :    "%Y-%m-%d",
+                            showsTime      :    false,
+                            timeFormat     :    "24"
+                        });
+                    </script>
+                    &nbsp;<span class="red">*</span><span id="hint2"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <th width="160">最后操作人</th>
+                <td >
+                    <{$usr}>
+                </td>
+            </tr>
+            <tr>
+                <th width="160">最后操作时间</th>
+                <td >
+                    <{$operate_time}>
+                </td>
+            </tr>
+
+            <tr>
+                <th></th>
+                <input type="hidden" name="id"/>
+                <td ><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" onclick="return confirm('确认提交?')"/></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+
+
+
+</body>
+</html>

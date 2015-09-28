@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("群发红包");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    function sures()
+    {
+        var score = document.getElementById("uid_score").value;
+        var y_score = 0;
+        if(score>0){
+            y_score = score/100;
+        }
+        if(confirm('发放金额为：'+y_score+'元,请确定继续？')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">群发红包</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/hongbao/" ><em>群发红包记录</em></a>
+        <span>|</span>
+        <a href="/admin/hongbao/add" class="on"><em>群发红包</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form name="request_hongbao" action="/admin/hongbao/add" method="post" id="myform" onsubmit="return sures()">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="100">用户ID：</th>
+                <td class="y-bg">
+                    <textarea style="height:160px; width:30%" name="uid_batch" id="uid_batch"></textarea> 限制200个,请使用逗号分隔  如 32414377,34525427
+                </td>
+            </tr>
+            <tr>
+                <th>内&nbsp;&nbsp;&nbsp;容：</th>
+                <td class="y-bg"><textarea style="height:120px; width:30%" name="content" id="content"></textarea></td>
+            </tr>
+            <tr>
+                <th>金&nbsp;&nbsp;&nbsp;额(单位/分)：</th>
+                <td class="y-bg"><input type="text" class="input-text" name="uid_score"  id="uid_score" /></td>
+            </tr>
+            <tr>
+                <th width="80">是否分享：</th>
+                <td class="y-bg">
+                    <input type="radio" name="allow_share_msg" checked="" value="1">
+                    是
+                    <input type="radio" name="allow_share_msg" value="0">
+                    否
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg"><input type="submit" class="button" id="dosubmit" name="dosubmit" value="发放红包" /></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+</body>
+</html>

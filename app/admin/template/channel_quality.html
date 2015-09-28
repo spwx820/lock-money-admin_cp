@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("渠道统计");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+
+
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body>
+
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">渠道统计</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/channel/quality" method="post" name="form_member_search">
+                时间搜索：
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <select name="os_type" id="os_type">
+                    <option value='' >请选择系统</option>
+                    <option value='0'>android/ios</option>
+                    <option value='1'>android</option>
+                    <option value='2'>ios</option>
+                </select>
+                <input name="channel" type="text" value="<{$channel}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+
+                <input type="button" class="button" id="export_csv" name="export_csv" value="导出" onclick="window.location.href = '/admin/channel/export_data?os_type=<{$os_type}>&channel=<{$channel}>&start_time=<{$startTime}>&end_time=<{$endTime}>'"/>
+            </form>
+
+            <!--<a href="/admin/channel/export_quality?os_type=<{$os_type}>&channel=<{$channel}>&start_time=<{$startTime}>&end_time=<{$endTime}>">-->
+                <!--<em>导出</em>-->
+            <!--</a>-->
+
+
+
+        </div>
+        <a href="/admin/channel/" >
+            <em>渠道统计</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/channel/quality" class="on" >
+            <em>渠道质量统计</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">ID</th>
+                <th align="left">渠道号</th>
+                <th align="left">时间</th>
+                <th align="left">用户总数</th>
+                <th align="left">每日渠道分数</th>
+                <th align="left">下载广告用户数(2天)</th>
+                <th align="left">人均广告下载分数(2天)</th>
+                <th align="left">成功邀请的用户数(2天)</th>
+                <th align="left">人均邀请(前天)</th>
+
+                <th align="left">下载广告用户数(4天)</th>
+                <th align="left">人均广告下载分数(4天)</th>
+                <th align="left">成功邀请的用户数(4天)</th>
+                <th align="left">人均邀请(4天)</th>
+
+                <th align="left">下载广告用户数(8天)</th>
+                <th align="left">人均广告下载分数(8天)</th>
+                <th align="left">成功邀请的用户数(8天)</th>
+                <th align="left">人均邀请(8天)</th>
+
+                <th align="left">活跃用户数(7天)</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <{foreach from=$channelList item=item key=key}>
+            <{if $item.active_num_real < $item.user_num_real * 0.45}>
+            <tr style="background: none repeat scroll 0 0 #FFDEB1;">
+                <{else}>
+            <tr>
+                <{/if}>
+                <td align="left"><{$item.id}></td>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.cdate}></td>
+                <td align="left"><{$item.user_num}></td>
+                <td align="left"><{$item.score_today}></td>
+                <td align="left"><{$item.dailyStat_ad_user}></td>
+                <td align="left"><{$item.dailyStat_ad_avg}></td>
+                <td align="left"><{$item.dailyStat_reg_user}></td>
+                <td align="left"><{$item.dailyStat_reg_avg}></td>
+
+                <td align="left"><{$item.dailyStat_ad_user_1}></td>
+                <td align="left"><{$item.dailyStat_ad_avg_1}></td>
+                <td align="left"><{$item.dailyStat_reg_user_1}></td>
+                <td align="left"><{$item.dailyStat_reg_avg_1}></td>
+
+                <td align="left"><{$item.dailyStat_ad_user_2}></td>
+                <td align="left"><{$item.dailyStat_ad_avg_2}></td>
+                <td align="left"><{$item.dailyStat_reg_user_2}></td>
+                <td align="left"><{$item.dailyStat_reg_avg_2}></td>
+
+                <td align="left"><{$item.new_active_user}></td>
+
+            </tr>
+            <{/foreach}>
+            </tbody>
+        </table>
+        <div id="pages"><{$channelPages}></div>
+    </div>
+</div>
+<script type="application/javascript">
+
+    function selected(){
+        document.getElementById("os_type")[parseInt("<{$os_type}>") + 1].selected=true;
+    }
+    selected();
+
+</script>
+
+</body>
+</html>

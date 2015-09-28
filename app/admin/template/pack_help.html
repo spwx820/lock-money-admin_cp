@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+
+        <a href="/admin/pack_help?os_type=android" class="<{$android}>"><em>Android打包升级手册</em></a>
+        <span>|</span>
+        <a href="/admin/pack_help?os_type=ios" class="<{$ios}>"><em>IOS打包升级手册</em></a>
+        <em class="red"></em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <{if $ios}>
+        <h2 class="title-1 line-x f14 fb blue lh28">IOS打包升级手册</h2>
+    <h3><span>1. </span>上传包管理</h3>
+    <p>目的: 将ipa包上传到cdn中, 并生成plist文件, 供用户下载.</p>
+    <p>步骤: 上传包管理页面下, 点击上传包, 上传ipa包, 该ipa包5分钟后会被同步到cdn上. 每次上传ipa包, 会自动生成plist文件, plist文件链接在红包锁屏官网域名下. 如果ipa包无法下载, 可以尝试清除cdn缓存; 如果plist文件无法下载, 可以尝试重新生成plist文件;</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果需要单独上传plist文件, 点击上传plist, 上传plist文件, 即可通过生成链接下载该plist文件. </p>
+    <br>
+    <p>注意: 此步骤要保证ipa包同步到cdn上, 并且plist文件下载链接可用. </p>
+    <br>
+
+    <h3><span>2. </span>测试包管理</h3>
+    <p>目的: 配置z_package_test表, 供从分享页面下载的用户使用, 投放比例按尾号来判断, 例如40%, 表示对ic尾号为0,1,2,3的用户生效. </p>
+    <p>步骤: 测试包管理页面下, 点击上传IOS测试包, 填入4位版本号, 按尾号投放比例, 上下架时间, 下载url; 其中url在itms-services://?action=download-manifest&url=后面填入上一步生成, 或者上传的plist文件链接.</p>
+    <br>
+    <p>注意: 下载链接务必填写正确; 测试包下载链接有半小时缓存, 上传之后最长生效时间为半小时. </p>
+    <br>
+
+    <h3><span>3. </span>版本管理</h3>
+    <p>目的: 配置z_version表, 供用户升级使用. </p>
+    <p>步骤: 版本管理页面下, 点击添加版本, 填入3位或4位版本号, 选择投放尾号, 选择操作系统, 下载url; 其中url在itms-services://?action=download-manifest&url=后面填入上一步生成, 或者上传的plist文件链接.</p>
+    <br>
+    <p>注意: 下载链接务必填写正确; 如果是全部更新, 需要将尾号全部选上; 服务器缓存时间10分钟, 最长10分钟后生效. </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果需要停止正在更新的版本, 请点击停止更新, 10分钟后生效. </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果需要废弃某个版本, 编辑该版本, 选择版本废弃, 该版本则会被强制升级到最新版本. </p>
+
+    <br>
+
+    <h3><span>4. </span>ios升级信息设置</h3>
+    <p>目的: ios升级信息配置, 供ios打包使用. </p>
+    <p>步骤: ios升级信息设置页面下, 填入最新的bundle-identifier, ios版本号, 和更新时间, 并提交.</p>
+
+    <h3><span>4. </span>打包管理</h3>
+    <p>目的: 自动打各个渠道的包, 现在的打包机器是mac mini. </p>
+    <p>步骤: 打包管理页面下, 打包添加是添加各渠道的打包配置; ios批量打包是根据 4 中设置的版本号, bundle-identifier信息, 批量打ios最新的包.</p>
+    <br>
+    <p>注意: 打包过程中, 需要注意有没有出现各种异常ipa包, 如果出现获取包异常, 应该是打包的mac mini出现故障, 如果出现本地包异常和cdn包异常, 请联系开发和运维. </p>
+
+    <br>
+
+    <{/if}>
+</div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>统计中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("支出统计");})
+
+        /**
+         * 全选checkbox,注意：标识checkbox id固定为为check_box
+         * @param string name 列表check名称,如 uid[]
+         */
+        function selectall(name) {
+            if ($("#check_box").attr("checked")==false) {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=false;
+                });
+            } else {
+                $("input[name='"+name+"']").each(function() {
+                    this.checked=true;
+                });
+            }
+        }
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+</head>
+
+<body>
+
+<div class="subnav">
+
+
+    <h2 class="title-1 line-x f14 fb blue lh28">支出统计</h2>
+    <div class="content-menu ib-a blue line-x">
+
+        <div class="rt">
+            <form action="/admin/expense" method="post" name="form_member_search">
+                录入时间
+                <link rel="stylesheet" type="text/css" href="/js/calendar/calendar-blue.css"/>
+                <script type="text/javascript" src="/js/calendar/calendar.js"></script>
+                <input type="text" name="start_time" id="start_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("start_time").value="<{$startTime}>";
+                    Calendar.setup({
+                        inputField     :    "start_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input type="text" name="end_time" id="end_time" value="" size="10" class="date" readonly>&nbsp;
+                <script language="javascript" type="text/javascript">
+                    date = new Date();document.getElementById ("end_time").value="<{$endTime}>";
+                    Calendar.setup({
+                        inputField     :    "end_time",
+                        ifFormat       :    "%Y-%m-%d",
+                        showsTime      :    false,
+                        timeFormat     :    "24"
+                    });
+                </script>
+                <input name="company" type="text" value="<{$company}>" class="input-text" />
+                <input type="submit" name="search" class="button" value="搜索" />
+
+                <input type="button" class="button" id="export_csv" name="export_csv" value="导出" onclick="window.location.href = '/admin/expense/export_data?company=<{$company}>&start_time=<{$startTime}>&end_time=<{$endTime}>'"/>
+            </form>
+        </div>
+
+        <a href="/admin/expense/"  class="on"><em>支出记录</em></a>
+        <span>|</span>
+        <!--<a href="/admin/expense/add"><em>支出添加</em></a>-->
+        <!--<span>|</span>-->
+        <a href="/admin/expense/upload" ><em>支出上传</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+
+<div class="pad-lr-10">
+    <form action="/admin/expense/del" method="post" name="form_expense_manage">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th align="left" width="40"><input type="checkbox" value="" id="check_box" onclick="selectall('mid[]');"></th>
+                    <th align="center">ID</th>
+                    <th align="left">录入时间</th>
+
+                    <th align="left">业务负责人*</th>
+                    <th align="left">合同编号*</th>
+                    <th align="left">收款公司名称*</th>
+                    <th align="left">费用类型*</th>
+                    <th align="left">结算开始日期*</th>
+                    <th align="left">结算结束日期*</th>
+                    <th align="left">渠道号</th>
+                    <th align="left">结算数据</th>
+                    <th align="left">结算单价（元）</th>
+                    <th align="left">结算金额*（元）</th>
+                    <th align="left">备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            <{if $expenseList}>
+            <{foreach from=$expenseList item=item key=key}>
+            <tr>
+                <td><input name="mid[]" id="mid[]" type="checkbox" value="<{$item.id}>"></td>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.ctime}></td>
+
+                <td align="left"><{$item.person}></td>
+                <td align="left"><{$item.code}></td>
+
+                <td align="left"><{$item.company}></td>
+                <td align="left"><{$item.type}></td>
+                <td align="left"><{$item.start_time}></td>
+                <td align="left"><{$item.end_time}></td>
+                <td align="left"><{$item.channel}></td>
+                <td align="left"><{$item.num_promo}></td>
+                <td align="left"><{$item.price}></td>
+                <td align="left"><{$item.expense}></td>
+                <td align="left"><{$item.remark}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+
+        <{if in_array($adminId,array(1,2,3,4,5,17,36,28,6))}>
+        <div class="btn">
+            <label for="check_box">全选/取消</label>
+            <input type="submit" class="button" value="删除" onclick="return confirm('您确定要删除吗？')"/>
+        </div>
+        <{/if}>
+        <div id="pages"><{$expensePages}></div>
+    </div>
+    </form>
+</div>
+</body>
+</html>

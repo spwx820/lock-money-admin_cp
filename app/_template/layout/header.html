@@ -1,0 +1,14 @@
+<div class="log white cut_line">您好！ <{$smarty.const.UNAME}> [管理员]<span>|</span><a href="/default/login/logout">[退出]</a></div>
+<{if $topMenu}>
+<ul class="nav white" id="top_menu">
+<{foreach from=$topMenu item=item key=key}>
+    <{if $key === 0}>
+    <li id="_M<{$item.id}>" class="on top_menu">
+    <{else}>
+    <li id="_M<{$item.id}>" class="top_menu">
+    <{/if}>
+        <a href="javascript:_M(<{$item.id}>,'/<{$item.app}>/<{$item.controller}>/<{$item.action}>')"  hidefocus="true" style="outline:none;"><{$item.name}></a>
+    </li>
+<{/foreach}>
+</ul>
+<{/if}>

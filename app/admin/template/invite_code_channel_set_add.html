@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/styleswitch.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+    <script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<!--<script type="text/javascript">-->
+    <!--&lt;!&ndash;-->
+    <!--$(function(){-->
+        <!--$.formValidator.initConfig({autotip:true,formid:"myform"});-->
+        <!--$("#channel").formValidator({onshow:"请输入邀请码号",onfocus:"邀请码号格式错误",oncorrect:"输入正确"}).inputValidator({regexp:"channel_num",datatype:"enum",onerror:"邀请码号格式错误"}).ajaxValidator({-->
+            <!--type : "get",-->
+            <!--url : "/admin/invite_code_channel_set/ajaxchannel",-->
+            <!--data :"",-->
+            <!--datatype : "html",-->
+            <!--async:'false',-->
+            <!--success : function(data){-->
+                <!--if( data == "1" ){-->
+                    <!--return true;-->
+                <!--}else{-->
+                    <!--return false;-->
+                <!--}-->
+            <!--},-->
+            <!--buttons: $("#dosubmit"),-->
+            <!--onerror : "邀请码已存在。",-->
+            <!--onwait : "请稍候..."-->
+        <!--});-->
+        <!--$("#remark").formValidator({onshow:"请填写备注",onfocus:"备注不能为空"}).regexValidator({regexp:"notempty",datatype:"enum",onerror:"备注不能为空"});-->
+     <!--})-->
+    <!--//&ndash;&gt;-->
+<!--</script>-->
+
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">邀请码配置</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/invite_code_channel_set/"><em>邀请码配置</em></a><span>|</span>
+        <a href="/admin/invite_code_channel_set/add" class="on"><em>邀请码配置添加</em></a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/invite_code_channel_set/add" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="150">邀请码号：</th>
+                <td class="y-bg"><input type="text" class="input-text" name="channel" id="channel" /></td>
+            </tr>
+
+            <tr>
+                <th width="150">权重值(范围1~100, 表示百分比)：</th>
+                <td class="y-bg">
+                    <input type="text" class="input-text" name="weight" id="weight" value=""/>
+                </td>
+            </tr>
+            <tr>
+                <th width="150">金额(大于零整数, 单位(:分), 默认为200)：</th>
+                <td class="y-bg">
+                    <input type="text" class="input-text" name="currency" id="currency" value="200"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="150">备注：</th>
+                <td class="y-bg"><textarea id="remark" name="remark" style="height:120px; width:30%"></textarea></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+        <input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" />
+    </form>
+</div>
+</body>
+</html>

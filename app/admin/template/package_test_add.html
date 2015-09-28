@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("上传测试包");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<script language="javascript" type="text/javascript" src="/js/formvalidator.js" charset="UTF-8"></script>
+<script language="javascript" type="text/javascript" src="/js/formvalidatorregex.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    <!--
+    $(function(){
+        $.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+        $("#pk_version").formValidator({onshow:"请输入4位版本号, 如 1.5.0.1",onfocus:"请正确输入4位版本号, 如 1.5.0.1",oncorrect:"输入正确"}).regexValidator({regexp:"version_num",datatype:"enum",onerror:"版本号格式错误"}).ajaxValidator({
+            type : "get",
+            url : "/admin/package_test/add",
+            data :"&ajax=pk_version",
+            datatype : "html",
+            async:'false',
+            success : function(data){
+                if( data == "1" ){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            buttons: $("#dosubmit"),
+            onerror : "版本号已存在。",
+            onwait : "请稍候..."
+        });
+    })
+    //-->
+</script>
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">测试包管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/package_test/"><em>测试包管理</em></a>
+        <span>|</span>
+        <a href="/admin/package_test/add"  class="on"><em>上传android测试包</em></a>
+        <span>|</span>
+        <a href="/admin/package_test/addIos"><em>上传ios测试包</em></a>
+        <em class="red">(小提示：* 必填项)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <form action="/admin/package_test/add" enctype="multipart/form-data" autocomplete="off" method="post" id="myform">
+        <table width="100%"  class="table_form">
+            <tr>
+                <th width="80">版本号：</th>
+                <td class="y-bg"><input type="text" style="width:30%" class="input-text" name="pk_version"  id="pk_version" /></td>
+            </tr>
+            <tr>
+                <th width="100">投放比例：</th>
+                <td class="y-bg">
+                    <select name="pk_scale">
+                        <option value='' >请选择比例</option>
+                        <{if $packageScale}>
+                        <{foreach from= $packageScale item=item key=key}>
+                        <option value='<{$key}>' ><{$item}></option>
+                        <{/foreach}>
+                        <{/if}>
+                    </select>&nbsp;<span class="red">*</span>
+                </td>
+            </tr>
+            <link href="/js/calendars/jscal2.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/border-radius.css" type="text/css" rel="stylesheet">
+            <link href="/js/calendars/win2k.css" type="text/css" rel="stylesheet">
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/calendar.js" type="text/javascript"></script>
+            <script src="/js/calendars/lang/en.js" type="text/javascript"></script>
+            <tr>
+                <th width="100">上架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="start_date" id="start_date" class="date input-text" type="text" readonly="" size="21">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "start_date",
+                            trigger : "start_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">下架时间：</th>
+                <td class="y-bg">
+                    <input type="text" name="end_date" id="end_date" class="date input-text" type="text" readonly="" size="21">
+                    <span class="red">*</span>
+                    <script type="text/javascript">
+                        Calendar.setup({
+                            weekNumbers: true,
+                            inputField : "end_date",
+                            trigger : "end_date",
+                            dateFormat: "%Y-%m-%d %H:%M:%S",
+                            showTime: true,
+                            minuteStep: 1,
+                            onSelect : function() {this.hide();}
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th width="100">上传包：</th>
+                <td class="y-bg"><input type="file" name="file_uplode" id="file_uplode" accept='.apk'/></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="y-bg"><input type="submit" class="button" id="dosubmit" name="dosubmit" value="提交" /></td>
+            </tr>
+        </table>
+        <div class="bk15"></div>
+    </form>
+</div>
+</body>
+</html>

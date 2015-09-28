@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("广告banner");
+        })
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body><div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">广告banner</h2>
+    <div class="content-menu ib-a blue line-x">
+        <div class="rt">
+            <form action="/admin/adbanner/" method="post" name="form_member_search">
+                <select name="action_os">
+                    <option value='' >请选择系统</option>
+                    <{if $publicOs}>
+                    <{foreach from=$publicOs item=item key=key}>
+                    <{if is_numeric($actionOs) && $actionOs == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <select name="action_status">
+                    <option value='' >请选择状态</option>
+                    <{if $publicStatus}>
+                    <{foreach from=$publicStatus item=item key=key}>
+                    <{if is_numeric($actionStatus) && $actionStatus == $key}>
+                    <option value='<{$key}>' selected><{$item}></option>
+                    <{else}>
+                    <option value='<{$key}>' ><{$item}></option>
+                    <{/if}>
+                    <{/foreach}>
+                    <{/if}>
+                </select>
+                <input type="submit" name="search" class="button" value="搜索" />
+            </form>
+        </div>
+        <a href="/admin/adbanner/" class="on">
+            <em>广告banner</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/adbanner/add" >
+            <em>广告banner添加</em>
+        </a>
+        <em class="red">(小提示：图片5分钟后才能显示)</em>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="left">排序号</th>
+                <th align="left">名称</th>
+                <th align="left">图片</th>
+                <th align="left">系统</th>
+                <th align="left">状态</th>
+                <th align="left">上架时间</th>
+                <th align="left">下架时间</th>
+                <th align="left">创建时间</th>
+                <th align="left">更新时间</th>
+                <th align="left">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $bannerList}>
+            <{foreach from=$bannerList item=item key=key}>
+            <{if $item.st ==1 && 1 == $item.isvalid}>
+            <tr style="background: none repeat scroll 0 0 #DBFCA3;">
+            <{else}>
+            <tr>
+            <{/if}>
+                <td align="left"><{$item.num}></td>
+                <td align="left" title="<{$item.memo}>"><{$item.name}></td>
+                <td align="left">
+                    <a href="<{$item.click_url}>" target="_blank">
+                        <img src="<{$item.pic_url}>" width="100" height="50" style="padding:10px">
+                    </a>
+                </td>
+                <td align="left"><{$publicOs[$item.os_type]}></td>
+                <td align="left">
+                    <{if 1 != $item.isvalid}>
+                    <span class="red">过期</span>
+                    <{else}>
+                        <{$publicStatus[$item.st]}>
+                    <{/if}>
+                </td>
+                <td align="left"><{$item.start_time}></td>
+                <td align="left"><{$item.end_time}></td>
+                <td align="left"><{$item.ctime}></td>
+                <td align="left"><{$item.utime}></td>
+                <td align="left">
+                    <{if 1 == $item.st && 1 == $item.isvalid}>
+                        <a href="/admin/adbanner/shut?id=<{$item.id}>&page=<{$page}>">[下架]</a>
+                        &nbsp;|&nbsp;
+                    <{elseif 0 == $item.st && 1 == $item.isvalid}>
+                        <a href="/admin/adbanner/open?id=<{$item.id}>&page=<{$page}>">[上架]</a>
+                        &nbsp;|&nbsp;
+                    <{/if}>
+                    <a href="/admin/adbanner/edit/?id=<{$item.id}>&page=<{$page}>">[编辑]</a>
+                    &nbsp;|&nbsp;<a href="/admin/adbanner/top?id=<{$item.id}>">[置顶]</a>
+                </td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+        <div id="pages"><{$bannerPages}></div>
+    </div>
+</div>
+</body>
+</html>

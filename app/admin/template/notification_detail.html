@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("通知详细");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+<div class="subnav">
+    <h2 class="title-1 line-x f14 fb blue lh28">通知管理</h2>
+    <div class="content-menu ib-a blue line-x">
+        <a href="/admin/notification/index">
+            <em>通知管理</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_ios" >
+            <em>iOS通知添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/add_android">
+            <em>Android通知添加</em>
+        </a>
+        <span>|</span>
+        <a href="/admin/notification/detail?nid=<{$nid}>&page=<{$page}>" class="on">
+            <em>通知详细</em>
+        </a>
+    </div>
+</div>
+<div class="pad-lr-10">
+    <table width="100%"  class="table_form">
+        <tr>
+            <td>通知ID：</td>
+            <td align="left"><{$getNotification['id']}></td>
+            <td>系统：</td>
+            <td align="left"><{$notificationOs[$getNotification['os_type']]}></td>
+            <td>状态：</td>
+            <td><{$notificationStatus[$getNotification['status']]}></td>
+            <td>类型：</td>
+            <td align="left"><{$publicType[$getNotification['n_type']]}></td>
+        </tr>
+        <tr>
+            <td>通知标题：</td>
+            <td colspan="7" align="left"><{$getNotification['title']}></td>
+        </tr>
+        <tr>
+            <td>通知副标题：</td>
+            <td colspan="7" align="left"><{$getNotification['subtitle']}></td>
+        </tr>
+        <tr>
+            <td>类别：</td>
+            <td align="left"><{$notificationType[$getNotification['action']]['name']}></td>
+            <td>消息ID：</td>
+            <td align="left"><{$getNotification['message_id']}></td>
+            <td>积分墙广告ID：</td>
+            <td><{$getNotification['ad_id']}></td>
+            <td>积分墙状态：</td>
+            <td align="left">
+                <{if in_array($item.action,array('integral_detail'))}>
+                <{$adStatus[$item.ad_status]}>
+                <{/if}>
+            </td>
+        </tr>
+        <tr>
+            <td>URLScheme：</td>
+            <td align="left"><{$getNotification['url_scheme']}></td>
+            <td>进程名：</td>
+            <td align="left"><{$getNotification['process_name']}></td>
+            <td>是否弹出：</td>
+            <td>
+                <{if 1 == $getNotification['is_popup']}>
+                是
+                <{else}>
+                否
+                <{/if}>
+            </td>
+            <td></td>
+            <td align="left"></td>
+        </tr>
+        <tr>
+            <td width="100">图片地址：</td>
+            <td colspan="7" align="left"><{$getNotification['url_images']}></td>
+        </tr>
+        <tr>
+            <td width="100">图片：</td>
+            <td colspan="7" align="left">
+                <{if !empty($getNotification['url_images'])}>
+                <img src="<{$getNotification['url_images']}>" width="100" height="200">
+                <{/if}>
+            </td>
+        </tr>
+        <tr>
+            <td width="100">跳转链接：</td>
+            <td colspan="7" align="left"><{$getNotification['click_url']}></td>
+        </tr>
+        <tr>
+            <td width="100">限制数量：</td>
+            <td colspan="7" align="left"><{if !empty($getNotification['limit_num'])}><{$getNotification['limit_num']}><{/if}></td>
+        </tr>
+        <tr>
+            <td width="100">到达/失败数：</td>
+            <td colspan="7" align="left"><{$getNotification['send_num']}></td>
+        </tr>
+        <tr>
+            <td>上线时间：</td>
+            <td align="left"><{$getNotification['start_date']}></td>
+            <td>下线时间：</td>
+            <td align="left"><{$getNotification['end_date']}></td>
+            <td>创建人：</td>
+            <td align="left"><{$getNotification['creater']}></td>
+            <td>创建时间：</td>
+            <td><{$getNotification['createtime']}></td>
+        </tr>
+        <tr>
+            <td width="100">错误信息：</td>
+            <td colspan="7" align="left">
+                <{$getNotification['wrong_msg']}>
+            </td>
+        </tr>
+    </table>
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="left">通知ID</th>
+                <th align="left">用户ID</th>
+                <th align="left">状态</th>
+                <th align="left">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $nPivateList}>
+            <{foreach from=$nPivateList item=item key=key}>
+            <tr>
+                <td align="center"><{$item.id}></td>
+                <td align="left"><{$item.nid}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$notificationStatus[$item.status]}></td>
+                <td align="left"><{$item.createtime}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

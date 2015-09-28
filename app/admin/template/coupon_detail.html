@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="IE=7" http-equiv="X-UA-Compatible">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理中心</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/css/system.css" rel="stylesheet" type="text/css" />
+    <link href="/css/table_form.css" rel="stylesheet" type="text/css" />
+    <link href="/css/dialog.css" rel="stylesheet" type="text/css" />
+    <script language="javascript" type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".table-list .wrap").wrap("<div style='overflow-y:auto;overflow-x:hidden;' class='scrolltable'></div>");
+            window.onresize = function(){
+                var wrapTr = $(".table-list .wrap tr").length*$(".table-list .wrap tr:eq(0)").height();
+                var scrolltable = $(window).height()-$(".subnav").height()-160;
+                if(wrapTr > scrolltable){
+                    $(".scrolltable").height(scrolltable);
+                }
+            }
+            window.onresize();
+            $(".table-list tr th").each(function(i){
+                i=i+1;
+                var tabTh = $(".table-list tr th:eq("+i+")").width();
+                $(".table-list .wrap tr:eq(0) td:eq("+i+")").width(tabTh)
+            });
+            parent.span_local("消息详细");})
+
+        /**
+         * 屏蔽js错误
+         */
+        function killerrors() {
+            return true;
+        }
+        window.onerror = killerrors;
+
+    </script>
+    <style type="text/css">
+        html{_overflow-y:scroll}
+    </style>
+</head>
+<body onbeforeunload="parent.showloading(1)">
+
+<{$page_header}>
+
+<div class="pad-lr-10">
+    <table width="100%"  class="table_form">
+        <tr>
+            <td>优惠券ID：</td>
+            <td align="left"><{$_coupon['id']}></td>
+            <td>优惠券名称：</td>
+            <td align="left"><{$_coupon['name']}></td>
+            <td>是否通知：</td>
+            <td align="left"><{$_coupon['info_notify']}></td>
+        </tr>
+        <tr>
+            <td>状态：</td>
+            <td><{$_coupon['status']}></td>
+            <td>上线时间：</td>
+            <td align="left"><{$_coupon['start_time']}></td>
+            <td>下线时间：</td>
+            <td align="left"><{$_coupon['end_time']}></td>
+        </tr>
+        <tr>
+            <td>创建时间：</td>
+            <td><{$_coupon['atime']}></td>
+            <td>成功率：</td>
+            <td><{$_coupon['succ_rate']}></td>
+        </tr>
+        <tr>
+            <td>优惠券标题：</td>
+            <td colspan="7" align="left"><{$_coupon['msg_title']}></td>
+        </tr>
+        <tr>
+            <td width="100">优惠券内容：</td>
+            <td colspan="7" align="left">
+                <textarea style="height:100px; width:40%" ><{$_coupon['msg_content']}></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td width="100">分享内容：</td>
+            <td colspan="7" align="left">
+                <textarea style="height:100px; width:40%"><{$_coupon['share_msg']}></textarea>
+            </td>
+            <td class="y-bg"><input type="submit" class="button" id="export_csv" name="export_csv" value="导出" onclick="window.location.href = '/admin/coupon/excel?id=<{$_coupon_id}>&list_type=<{$list_type}>'"/></td>
+        </tr>
+
+    </table>
+    <div class="table-list">
+        <table width="100%" cellspacing="0">
+            <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="left">优惠券券码</th>
+                <th align="left">优惠券密码</th>
+                <th align="left">用户ID</th>
+                <th align="left">用户手机号</th>
+                <th align="left">状态</th>
+                <th align="left">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <{if $_list}>
+            <{foreach from=$_list item=item key=key}>
+            <tr>
+                <td align="center"><{$item.coupon_id}></td>
+                <td align="left"><{$item.code}></td>
+                <td align="left"><{$item.pwd}></td>
+                <td align="left"><{$item.uid}></td>
+                <td align="left"><{$item.pnum}></td>
+                <td align="left"><{$item.is_send}></td>
+                <td align="left"><{$item.ctime}></td>
+            </tr>
+            <{/foreach}>
+            <{/if}>
+            </tbody>
+        </table>
+    </div>
+    <div id="pages"><{$coupon_pages}></div>
+</div>
+
+
+</body>
+</html>
