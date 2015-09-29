@@ -773,70 +773,6 @@ function url_par($par, $url = '')
     return $url;
 }
 
-//
-//<div class="col-sm-7 pull-right">
-//            <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
-//                <ul class="pagination">
-//                    <li class="paginate_button previous disabled" id="example1_previous">
-//                        <a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0">Previous</a>
-//                    </li>
-//                    <li class="paginate_button active">
-//                        <a href="#" aria-controls="example1" data-dt-idx="1" tabindex="0">1</a>
-//                    </li>
-//                    <li class="paginate_button">
-//                        <a href="#" aria-controls="example1" data-dt-idx="2" tabindex="0">2</a>
-//                    </li>
-//                    <li class="paginate_button">
-//                        <a href="#" aria-controls="example1" data-dt-idx="3" tabindex="0">3</a>
-//                    </li>
-//                    <li class="paginate_button">
-//                        <a href="#" aria-controls="example1" data-dt-idx="4" tabindex="0">4</a>
-//                    </li>
-//                    <li class="paginate_button">
-//                        <a href="#" aria-controls="example1" data-dt-idx="5" tabindex="0">5</a>
-//                    </li>
-//                    <li class="paginate_button">
-//                        <a href="#" aria-controls="example1" data-dt-idx="6" tabindex="0">6</a>
-//                    </li>
-//                    <li class="paginate_button next" id="example1_next">
-//                        <a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0">Next</a>
-//                    </li>
-//                </ul>
-//            </div>
-//        </div>
-
-//
-//function pages_new($num, $curr_page, $perpage = 60, $url='')
-//{
-//    if ($url == '')
-//    {
-//        return $url;
-//    }
-//    $multipage = '';
-//    if ($num > $perpage)
-//    {
-//        $multipage .= '<div class="col-sm-7 pull-right">
-//            <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
-//                <ul class="pagination">';
-//        $curr_page_1 = $curr_page - 1;
-//
-//        if ($curr_page == 1)
-//        {
-//            $multipage .= '<li class="paginate_button previous disabled" id="example1_previous">
-//                         <a href=' . "$url&page={$curr_page_1}" . ' >Previous</a>
-//                    </li>';
-//        } else
-//        {
-//            $multipage .= '<li class="paginate_button previous" id="example1_previous">
-//                        <a href=' . "$url&page={$curr_page_1}" . ' >Previous</a>
-//                    </li>';
-//        }
-//
-//        if()
-//
-//    }
-//    return $multipage;
-//}
 
 
 function get_page_header()
@@ -902,8 +838,13 @@ function get_page_header()
 
 
 
-function pages_new($num, $curr_page, $perpage = 60, $url='')
+function pages_new($num, $curr_page, $perpage = 60, $url='', $id = "page")
 {
+    $sep = "?";
+    if(strstr($url, "?"))
+        $sep = "&";
+
+
     if ($url == '')
     {
         return $url;
@@ -952,24 +893,24 @@ function pages_new($num, $curr_page, $perpage = 60, $url='')
                 if ($curr_page == 1)
                 {
                     $multipage .= '<li class="paginate_button previous disabled" id="example1_previous">
-                         <a href=' . "$url&page={$curr_page_1}" . ' >Previous</a></li>';
+                         <a href=# >Previous</a></li>';
 
                     $multipage .= '<li class="paginate_button active">
-                        <a href="#" >1</a></li>';
+                        <a href="#" id="'. $id .'">1</a></li>';
                 } elseif ($curr_page > 6 && $more)
                 {
                     $multipage .= '<li class="paginate_button previous" id="example1_previous">
-                        <a href=' . "$url&page={$curr_page_1}" . ' >Previous</a></li>';
+                        <a href=' . "$url". $sep . "page={$curr_page_1}" . ' >Previous</a></li>';
                     $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=1" . ' >1</a></li>';
+                        <a href=' . "$url". $sep . "page=1" . ' >1</a></li>';
                     $multipage .= '<li class="paginate_button">
                         <a href="#" >..</a></li>';
                 } else
                 {
                     $multipage .= '<li class="paginate_button previous" id="example1_previous">
-                        <a href=' . "$url&page={$curr_page_1}" . ' >Previous</a></li>';
+                        <a href=' . "$url". $sep . "page={$curr_page_1}" . ' >Previous</a></li>';
                     $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=1" . ' >1</a></li>';
+                        <a href=' . "$url". $sep . "page=1" . ' >1</a></li>';
                 }
             }
             for ($i = $from; $i <= $to; $i++)
@@ -977,11 +918,11 @@ function pages_new($num, $curr_page, $perpage = 60, $url='')
                 if ($i != $curr_page)
                 {
                     $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=$i" . ' >' . $i . '</a></li>';
+                        <a href=' . "$url". $sep . "page=$i" . ' >' . $i . '</a></li>';
                 } else
                 {
                     $multipage .= '<li class="paginate_button active">
-                        <a href="#" >' . $i . '</a></li>';
+                        <a href="#" id="'. $id .'">' . $i . '</a></li>';
                 }
             }
             if ($curr_page < $pages)
@@ -991,22 +932,22 @@ function pages_new($num, $curr_page, $perpage = 60, $url='')
                     $multipage .= '<li class="paginate_button">
                         <a href="#" >..</a></li>';
                     $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=$pages" . ' >' . $pages . '</a></li>';
+                        <a href=' . "$url". $sep . "page=$pages" . ' >' . $pages . '</a></li>';
                     $multipage .= '<li class="paginate_button next" id="example1_next">
-                        <a href=' . "$url&page={$curr_page_1_N}" . '  >Next</a></li>';
+                        <a href=' . "$url". $sep . "page={$curr_page_1_N}" . '  >Next</a></li>';
                 } else
                 {
                     $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=$pages" . ' >' . $pages . '</a></li>';
+                        <a href=' . "$url". $sep . "page=$pages" . ' >' . $pages . '</a></li>';
                     $multipage .= '<li class="paginate_button next" id="example1_next">
-                        <a href=' . "$url&page={$curr_page_1_N}" . '  >Next</a></li>';
+                        <a href=' . "$url". $sep . "page={$curr_page_1_N}" . '  >Next</a></li>';
                 }
             } elseif ($curr_page == $pages)
             {
                 $multipage .= '<li class="paginate_button">
-                        <a href=' . "$url&page=$pages" . ' >' . $pages . '</a></li>';
+                        <a href=# id="'. $id .'">' . $pages . '</a></li>';
                 $multipage .= '<li class="paginate_button next disabled" id="example1_next">
-                        <a href=' . "$url&page={$curr_page_1_N}" . '  >Next</a></li>';
+                        <a href=#  >Next</a></li>';
 
             }
         }
@@ -1018,7 +959,7 @@ function pages_new($num, $curr_page, $perpage = 60, $url='')
 }
 
 
-function get_date_range_picker($component_id)
+function get_date_range_picker($component_id, $value = "")
 {
     return ' <div class="form-group">
                 <span>起止日期</span>
@@ -1026,7 +967,7 @@ function get_date_range_picker($component_id)
                     <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </div>
-                    <input type="text" class="form-control pull-right" id="' . $component_id . '" />
+                    <input type="text" class="form-control pull-right" id="' . $component_id . '" name="' . $component_id . '" value="'. $value . '"/>
                 </div>
             </div>
 
@@ -1042,16 +983,22 @@ function get_date_range_picker($component_id)
 }
 
 
-function get_select($id, $label, $values, $len = 130)  // $values = arrayy(1 => "val_1", 3 => "val_2", 7 => "val_3")
+function get_select($id, $label, $values, $value = "", $len = 130)  // $values = arrayy(1 => "val_1", 3 => "val_2", 7 => "val_3")
 {
     $str = ' <div class="form-group " style="padding-left: 3px;">
                 <div class="input-group">
-                    <select class="form-control" style="width: ' . $len . 'px" id="' . $id . '">
+                    <select class="form-control" style="width: ' . $len . 'px" id="' . $id . '" name="' . $id . '">
                         <option value="0">' . $label . '</option>';
 
     foreach($values as $key => $var)
     {
-        $str .= '<option value="' . $key . '">' . $var . '</option>';
+        if($var == $value)
+        {
+            $str .= '<option value="' . $key . '" selected>' . $var . '</option>';
+        }
+        else{
+            $str .= '<option value="' . $key . '">' . $var . '</option>';
+        }
     }
 
     $str .= '</select>
@@ -1061,428 +1008,59 @@ function get_select($id, $label, $values, $len = 130)  // $values = arrayy(1 => 
     return $str;
 }
 
-function get_table()
-{
-    return '<table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
-                                        <th>CSS grade</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0 </td>
-                                        <td>Win 95+</td>
-                                        <td>4</td>
-                                        <td>X</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 5.0 </td>
-                                        <td>Win 95+</td>
-                                        <td>5</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 5.5 </td>
-                                        <td>Win 95+</td>
-                                        <td>5.5</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 6 </td>
-                                        <td>Win 98+</td>
-                                        <td>6</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 7</td>
-                                        <td>Win XP SP2+</td>
-                                        <td>7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Trident</td>
-                                        <td>AOL browser (AOL desktop)</td>
-                                        <td>Win XP</td>
-                                        <td>6</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Firefox 1.0</td>
-                                        <td>Win 98+ / OSX.2+</td>
-                                        <td>1.7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Firefox 1.5</td>
-                                        <td>Win 98+ / OSX.2+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Firefox 2.0</td>
-                                        <td>Win 98+ / OSX.2+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Firefox 3.0</td>
-                                        <td>Win 2k+ / OSX.3+</td>
-                                        <td>1.9</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Camino 1.0</td>
-                                        <td>OSX.2+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Camino 1.5</td>
-                                        <td>OSX.3+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Netscape 7.2</td>
-                                        <td>Win 95+ / Mac OS 8.6-9.2</td>
-                                        <td>1.7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Netscape Browser 8</td>
-                                        <td>Win 98SE+</td>
-                                        <td>1.7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Netscape Navigator 9</td>
-                                        <td>Win 98+ / OSX.2+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.0</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.1</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.1</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.2</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.2</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.3</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.3</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.4</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.4</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.5</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.5</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.6</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>1.6</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.7</td>
-                                        <td>Win 98+ / OSX.1+</td>
-                                        <td>1.7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Mozilla 1.8</td>
-                                        <td>Win 98+ / OSX.1+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Seamonkey 1.1</td>
-                                        <td>Win 98+ / OSX.2+</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Gecko</td>
-                                        <td>Epiphany 2.20</td>
-                                        <td>Gnome</td>
-                                        <td>1.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>Safari 1.2</td>
-                                        <td>OSX.3</td>
-                                        <td>125.5</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>Safari 1.3</td>
-                                        <td>OSX.3</td>
-                                        <td>312.8</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>Safari 2.0</td>
-                                        <td>OSX.4+</td>
-                                        <td>419.3</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>Safari 3.0</td>
-                                        <td>OSX.4+</td>
-                                        <td>522.1</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>OmniWeb 5.5</td>
-                                        <td>OSX.4+</td>
-                                        <td>420</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>iPod Touch / iPhone</td>
-                                        <td>iPod</td>
-                                        <td>420.1</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Webkit</td>
-                                        <td>S60</td>
-                                        <td>S60</td>
-                                        <td>413</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 7.0</td>
-                                        <td>Win 95+ / OSX.1+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 7.5</td>
-                                        <td>Win 95+ / OSX.2+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 8.0</td>
-                                        <td>Win 95+ / OSX.2+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 8.5</td>
-                                        <td>Win 95+ / OSX.2+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 9.0</td>
-                                        <td>Win 95+ / OSX.3+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 9.2</td>
-                                        <td>Win 88+ / OSX.3+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera 9.5</td>
-                                        <td>Win 88+ / OSX.3+</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Opera for Wii</td>
-                                        <td>Wii</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Nokia N800</td>
-                                        <td>N800</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Presto</td>
-                                        <td>Nintendo DS browser</td>
-                                        <td>Nintendo DS</td>
-                                        <td>8.5</td>
-                                        <td>C/A<sup>1</sup></td>
-                                    </tr>
-                                    <tr>
-                                        <td>KHTML</td>
-                                        <td>Konqureror 3.1</td>
-                                        <td>KDE 3.1</td>
-                                        <td>3.1</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>KHTML</td>
-                                        <td>Konqureror 3.3</td>
-                                        <td>KDE 3.3</td>
-                                        <td>3.3</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>KHTML</td>
-                                        <td>Konqureror 3.5</td>
-                                        <td>KDE 3.5</td>
-                                        <td>3.5</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tasman</td>
-                                        <td>Internet Explorer 4.5</td>
-                                        <td>Mac OS 8-9</td>
-                                        <td>-</td>
-                                        <td>X</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tasman</td>
-                                        <td>Internet Explorer 5.1</td>
-                                        <td>Mac OS 7.6-9</td>
-                                        <td>1</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tasman</td>
-                                        <td>Internet Explorer 5.2</td>
-                                        <td>Mac OS 8-X</td>
-                                        <td>1</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>NetFront 3.1</td>
-                                        <td>Embedded devices</td>
-                                        <td>-</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>NetFront 3.4</td>
-                                        <td>Embedded devices</td>
-                                        <td>-</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>Dillo 0.8</td>
-                                        <td>Embedded devices</td>
-                                        <td>-</td>
-                                        <td>X</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>Links</td>
-                                        <td>Text only</td>
-                                        <td>-</td>
-                                        <td>X</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>Lynx</td>
-                                        <td>Text only</td>
-                                        <td>-</td>
-                                        <td>X</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>IE Mobile</td>
-                                        <td>Windows Mobile 6</td>
-                                        <td>-</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Misc</td>
-                                        <td>PSP browser</td>
-                                        <td>PSP</td>
-                                        <td>-</td>
-                                        <td>C</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Other browsers</td>
-                                        <td>All others</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>U</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Rendering engine</th>
-                                        <th>Browser</th>
-                                        <th>Platform(s)</th>
-                                        <th>Engine version</th>
-                                        <th>CSS grade</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>';
 
+
+
+function get_table($th, $tbody)
+{
+    $str = '<table id="data_table" class="table table-bordered table-hover">';
+    $str .= '<thead>
+            <tr>';
+
+    foreach ($th as $key => $value)
+    {
+        $str .=  '<th>' . $value . '</th>' ;
+    }
+    $str .=  '</tr>
+            </thead>';
+
+    $str .= '<tbody>';
+
+    foreach ($tbody as $key => $value)
+    {
+        $str .= '<tr>';
+        foreach ($th as $k => $v)
+        {
+            $str .=  '<td>' . $value[$k] . '</td>';
+        }
+        $str .= '</tr>';
+    }
+
+    $str .= '</tbody></table>';
+
+    $str .= '<script>
+  $(function () {
+    $("#data_table").DataTable(
+    {
+      "paging": false,
+      "searching": false,
+      "ordering": true,
+      "info": false,
+    }
+    );
+  });
+</script>';
+
+    return $str;
 }
+
+
+function get_input_box($id, $value = "")
+{
+    return  ' <div class="form-group " style="padding-left: 3px; width: 90px">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="" id="' . $id . '" name="' . $id . '" value="' . $value . '"/>
+                </div>
+            </div>';
+}
+

@@ -14,42 +14,46 @@ class Leb_Response
 
     /**
      * 重定向
-     * @param string   $msg     显示消息
-     * @param string   $url     to Go
-     * @param int      $time    页面停留时间单位秒，0：页面不跳转
+     * @param string $msg 显示消息
+     * @param string $url to Go
+     * @param int $time 页面停留时间单位秒，0：页面不跳转
      *
      */
-    static public function redirect($msg, $url, $time, $type='success')
+    static public function redirect($msg, $url, $time, $type = 'success')
     {
         $viewer = Leb_View::getInstance();
         $viewer->setTemplate('msg');
 
         $stay_time = $time * 1000;
-        if (0 == $stay_time) {
+        if (0 == $stay_time)
+        {
             $viewer->direct_js = '';
-        } else {
-            if ('' == $url) {
+        } else
+        {
+            if ('' == $url)
+            {
                 $viewer->direct_js = "setTimeout(\"history.go(-1);\",{$stay_time})";;
-            } else {
+            } else
+            {
                 $viewer->direct_js = "setTimeout(\"window.location.href ='{$url}';\",{$stay_time})";
             }
         }
 
-        $url  = empty($url) ? 'Javascript:window.history.back();' : $url;
-        $class= $html = '';
+        $url = empty($url) ? 'Javascript:window.history.back();' : $url;
+        $class = $html = '';
         switch ($type)
         {
-        case 'success':
-            $class = 'fl zqicon';
-            break;
-        case 'error':
-            $class = 'fl tsicon';
-            break;
+            case 'success':
+                $class = 'fl zqicon';
+                break;
+            case 'error':
+                $class = 'fl tsicon';
+                break;
         }
 
-        if($class)
+        if ($class)
         {
-            $html =<<<EOF
+            $html = <<<EOF
 <div class="{$class}"></div>
 <div class="fl ml10">
     <p class="f14 col_5">{$msg}</p>

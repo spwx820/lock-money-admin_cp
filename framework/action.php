@@ -621,4 +621,32 @@ class Leb_Action extends Leb_Plugin_Broker_Abstract
         $return = language('controller', $lan, get_gvar('APPLICATION'), get_gvar('CONTROLLER'), get_gvar('ACTION'));
         return $return;
     }
+
+    public function alert($msg, $url)
+    {
+        echo
+        '<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/bootstrap/css/bootstrap-dialog.min.css" />
+  <script src="/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+ <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/plugins/bootstrap-dialog.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+        BootstrapDialog.show({
+            title: "消息提示",
+            message: "' . $msg . '",
+            buttons: [{
+                label: "确定",
+                action: function(dialog) {
+                    window.location.href = "' . $url . '";
+                }
+            }]
+        });
+
+        })
+
+    </script>
+';die();
+    }
 }

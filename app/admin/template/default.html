@@ -41,9 +41,8 @@
         <section class="content-header">
             <h1>兑换记录</h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
-                <li><a href="#">Tables</a></li>
-                <li class="active">Data tables</li>
+                <li><a href="#"><i class="fa fa-dashboard"></i>首页</a></li>
+                <li class="active">运营</li>
             </ol>
         </section>
         <!-- Main content -->
@@ -60,33 +59,30 @@
                             </ul>
 
 
-                            <form class="form-inline pull-right" style="padding-top: 3px;" action="/admin/default">
+                            <form class="form-inline pull-right" style="padding-top: 3px;" action="/admin/default/" method="post">
 
                                 <!-- get date_range component in php-->
                                 <{$date_range}>
 
                                 <!-- get date_range component in php-->
-                                <{$pay_type_list}>
+                                <{$action_pay_type_select}>
 
                                 <!-- get date_range component in php-->
-                                <{$pay_type_list}>
+                                <{$action_pay_status_select}>
 
                                 <!-- get date_range component in php-->
-                                <{$exchange_select}>
+                                <{$action_type_select}>
 
+                                <!-- get date_range component in php-->
+                                <{$keyword_box}>
 
-                                <div class="form-group " style="padding-left: 3px; width: 90px">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" />
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-default" id="submit">Search</button>
+                                <button type="submit" class="btn btn-default" id="search" name="search" value="sr">Search</button>
                             </form>
 
                             <!-- /.box-header -->
                             <div class="box-body table_place_holder">
 
+                                <{$table}>
 
                             </div>
                             <!-- /.box-body -->
@@ -97,18 +93,50 @@
                 </div>
                 <!-- /.row -->
 
-                <{$pages}>
+                <{$exchangePages}>
 
             </div>
         </section>
         <!-- /.content -->
+
+        <div class="modal fade" id="refund_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">退款说明(字数大于15字)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" id="modal_form" name="modal_form" method="post" data-toggle="validator">
+                            <div class="form-group">
+                                <label for="message_text" class="control-label">说明:</label>
+                                <textarea class="form-control" id="message_text" name="remark" data-minlength="15"></textarea>
+                            </div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary" name="dosubmit" value="ok">确定</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            function set_action(obj)
+            {
+                var id = obj.id;
+                document.modal_form.action = "/admin/default/refund?pay_id=" + id;
+            }
+
+
+        </script>
+
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b>Version</b>2.3.1
+            <b>点乐科技</b>
         </div>
-        <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong>All rights reserved.
+        <strong>Almsaeed theme</strong>
     </footer>
     <!-- ./wrapper -->
 
@@ -131,21 +159,10 @@
 
     <script src="/plugins/daterangepicker/daterangepicker.js"></script>
 
-    <script>
-        $(function () {
-            // $("#example1").DataTable();
-            $('#example1').DataTable({
-                "paging": false,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": false,
-                "autoWidth": false
-            });
+    <script src="/plugins/validator.min.js"></script>
 
-        });
 
-    </script>
+
 </div>
 </body>
 </html>
