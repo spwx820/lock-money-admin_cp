@@ -165,13 +165,13 @@ class defaultController extends Application
         $this->assign('date_range', $date_range);
 
 
-        $action_pay_type_select = get_select("action_pay_type", "兑换类型", $m['pay_type'], $actionType);
+        $action_pay_type_select = get_select_form_group("action_pay_type", "兑换类型", $m['pay_type'], $actionType);
         $this->assign('action_pay_type_select', $action_pay_type_select);
 
-        $action_pay_status_select = get_select("action_pay_status", "兑换状态", $m['pay_status'], $actionPayStatus);
+        $action_pay_status_select = get_select_form_group("action_pay_status", "兑换状态", $m['pay_status'], $actionPayStatus);
         $this->assign('action_pay_status_select', $action_pay_status_select);
 
-        $action_type_select = get_select("action_type", "类型", $m['exchange_select'], $actionType,  100);
+        $action_type_select = get_select_form_group("action_type", "类型", $m['exchange_select'], $actionType,  100);
         $this->assign('action_type_select', $action_type_select);
 
         $keyword_box = get_input_box("keyword", $value = "");
@@ -207,6 +207,31 @@ class defaultController extends Application
 
         $this->getViewer()->needLayout(false);
         $this->render('default');
+
+    }
+
+    public function detailAction()
+    {
+
+        $this->getViewer()->needLayout(false);
+        $this->render('default_layout');
+    }
+
+    public function addAction()
+    {
+        $m = C('global.php');
+        $action_type_select = get_select_("action_type", "类型", $m['exchange_select']);
+        $this->assign('action_type_select', $action_type_select);
+
+        $start_time = get_date_time_raw("start_time");
+        $this->assign('start_time', $start_time);
+
+
+        $end_time = get_date_time_raw("end_time");
+        $this->assign('end_time', $end_time);
+
+        $this->getViewer()->needLayout(false);
+        $this->render('default_form');
     }
 
 

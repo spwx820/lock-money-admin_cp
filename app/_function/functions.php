@@ -962,8 +962,8 @@ function pages_new($num, $curr_page, $perpage = 60, $url='', $id = "page")
 function get_date_range_picker($component_id, $value = "")
 {
     return ' <div class="form-group">
-                <span>起止日期</span>
-                <div class="input-group" style="padding-left: 3px; width: 210px">
+                <label for="' . $component_id . '" class="control-label">起止日期</label>
+                <div class="input-group" style="padding-left: 3px; width: 250px">
                     <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </div>
@@ -983,11 +983,11 @@ function get_date_range_picker($component_id, $value = "")
 }
 
 
-function get_select($id, $label, $values, $value = "", $len = 130)  // $values = arrayy(1 => "val_1", 3 => "val_2", 7 => "val_3")
+function get_select_form_group($id, $label, $values, $value = "", $len = 130)  // $values = arrayy(1 => "val_1", 3 => "val_2", 7 => "val_3")
 {
-    $str = ' <div class="form-group " style="padding-left: 3px;">
+    $str = ' <div class="form-group ">
                 <div class="input-group">
-                    <select class="form-control" style="width: ' . $len . 'px" id="' . $id . '" name="' . $id . '">
+                    <select class="form-control"  id="' . $id . '" name="' . $id . '">
                         <option value="0">' . $label . '</option>';
 
     foreach($values as $key => $var)
@@ -1064,3 +1064,49 @@ function get_input_box($id, $value = "")
             </div>';
 }
 
+
+
+function get_select_($id, $label, $values, $value = "", $len = 130)  // $values = arrayy(1 => "val_1", 3 => "val_2", 7 => "val_3")
+{
+    $str = '
+                    <select class="form-control" style="width: ' . $len . 'px" id="' . $id . '" name="' . $id . '">
+                        <option value="0">' . $label . '</option>';
+
+    foreach($values as $key => $var)
+    {
+        if($var == $value)
+        {
+            $str .= '<option value="' . $key . '" selected>' . $var . '</option>';
+        }
+        else{
+            $str .= '<option value="' . $key . '">' . $var . '</option>';
+        }
+    }
+
+    $str .= '</select>';
+
+    return $str;
+}
+
+
+
+function get_date_time_raw($component_id, $value = "")
+{
+    return '<div class="input-group" >
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control pull-right" id="' . $component_id . '" name="' . $component_id . '" value="'. $value . '" required/>
+                </div>
+
+            <script>
+            $(function () {
+                //Date range picker
+                $("#' . $component_id . '").datetimepicker({
+                   format: "yyyy-mm-dd hh:ii"
+                });
+
+            });
+            </script>
+';
+}
